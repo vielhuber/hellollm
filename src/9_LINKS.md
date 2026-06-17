@@ -1,4 +1,0 @@
-- https://sebastianraschka.com/llms-from-scratch/
-- https://vielhuber.de/blog/large-language-model-selbst-bauen/
-- https://gist.github.com/vielhuber/81f6eb87fedd5e677144aef2b5476cf7
-- https://gist.github.com/vielhuber/8d753f23b642cc326386dcc7ea1585d7
