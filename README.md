@@ -68,10 +68,10 @@ flowchart TD
     click X "https://github.com/vielhuber/hellollm#post-training" "Open post-training"
 ```
 
-<a id="pretraining"></a>
-
 <details>
 <summary>1.0 Pretraining</summary>
+
+<a id="pretraining"></a>
 
 Source: [1.0_PRETRAINING.md](src/1.0_PRETRAINING.md)
 
@@ -82,10 +82,10 @@ Source: [1.0_PRETRAINING.md](src/1.0_PRETRAINING.md)
 
 </details>
 
-<a id="pretraining-data"></a>
-
 <details>
 <summary>1.1 Data</summary>
+
+<a id="pretraining-data"></a>
 
 Source: [1.1_DATA.md](src/1.1_DATA.md)
 
@@ -99,10 +99,10 @@ Source: [1.1_DATA.md](src/1.1_DATA.md)
 
 </details>
 
-<a id="flow"></a>
-
 <details>
 <summary>1.2 Flow</summary>
+
+<a id="flow"></a>
 
 Source: [1.2_FLOW.md](src/1.2_FLOW.md)
 
@@ -113,10 +113,10 @@ Source: [1.2_FLOW.md](src/1.2_FLOW.md)
 
 </details>
 
-<a id="embedding"></a>
-
 <details>
 <summary>1.3 Embedding</summary>
+
+<a id="embedding"></a>
 
 Source: [1.3_EMBEDDING.md](src/1.3_EMBEDDING.md)
 
@@ -129,10 +129,10 @@ Source: [1.3_EMBEDDING.md](src/1.3_EMBEDDING.md)
 
 </details>
 
-<a id="model"></a>
-
 <details>
 <summary>1.4 Model</summary>
+
+<a id="model"></a>
 
 Source: [1.4_MODEL.md](src/1.4_MODEL.md)
 
@@ -159,10 +159,10 @@ starts   [0.3800, 0.3097, 0.3103]]
 
 </details>
 
-<a id="post-training"></a>
-
 <details>
 <summary>2.0 Post-training</summary>
+
+<a id="post-training"></a>
 
 Source: [2.0_POSTTRAINING.md](src/2.0_POSTTRAINING.md)
 
@@ -173,10 +173,10 @@ Source: [2.0_POSTTRAINING.md](src/2.0_POSTTRAINING.md)
 
 </details>
 
-<a id="post-training-data"></a>
-
 <details>
 <summary>2.1 Data</summary>
+
+<a id="post-training-data"></a>
 
 Source: [2.1_DATA.md](src/2.1_DATA.md)
 
