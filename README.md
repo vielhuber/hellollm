@@ -7,6 +7,7 @@ hellollm is a set of minimal, hand-written notes that explain how large language
 
 ## content
 
+0. [master](src/0.0_MASTER.md)
 1. [pretraining](src/1.0_PRETRAINING.md)
     - [data](src/1.1_DATA.md)
     - [flow](src/1.2_FLOW.md)
