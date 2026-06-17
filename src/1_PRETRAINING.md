@@ -1,13 +1,8 @@
-Training set (`1.1_DATA.md`) + initialized/current weights
+```mermaid
+flowchart TD
+    A["Training set<br/>1.1_DATA.md<br/>+ initialized/current weights"]
+    B["Run Flow<br/>1.2_FLOW.md<br/>predict next token<br/>compare with real data"]
+    C["Optimize weights<br/>minimize training loss"]
 
-⇓
-
-Run Flow (`1.2_FLOW.md`) to predict next token and compare with real data
-
-⇓
-
-Optimize weights to minimize training loss
-
-⇓
-
-Repeat
+    A --> B --> C --> B
+```

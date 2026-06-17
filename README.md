@@ -3,9 +3,9 @@
 
 # 🫙 hellollm 🫙
 
-hellollm is a set of minimal, hand-written notes that explain how large language models work from scratch — visualized as a simple top-down data flow from raw text all the way to the next predicted token.
+hellollm is a set of minimal, hand-written notes that explain how large language models work from scratch, visualized as a simple top-down data flow from raw text all the way to the next predicted token.
 
-## contents
+## content
 
 1. [pretraining](src/1_PRETRAINING.md)
     - [data](src/1.1_DATA.md)
@@ -17,7 +17,7 @@ hellollm is a set of minimal, hand-written notes that explain how large language
 
 ## links
 
-- https://sebastianraschka.com/llms-from-scratch/
-- https://vielhuber.de/blog/large-language-model-selbst-bauen/
+- https://sebastianraschka.com/llms-from-scratch
+- https://vielhuber.de/blog/large-language-model-selbst-bauen
 - https://gist.github.com/vielhuber/81f6eb87fedd5e677144aef2b5476cf7
 - https://gist.github.com/vielhuber/8d753f23b642cc326386dcc7ea1585d7

@@ -1,4 +1,4 @@
-Weights from pretraining + Post-training dataset (`2.1_DATA.md`)
+Weights from pretraining + Post-training dataset ([2.1_DATA.md](2.1_DATA.md))
 
 ⇓
 
