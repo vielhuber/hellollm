@@ -7,14 +7,194 @@ hellollm is a set of minimal, hand-written notes that explain how large language
 
 ## content
 
-0. [master](src/0.0_MASTER.md)
-1. [pretraining](src/1.0_PRETRAINING.md)
-    - [data](src/1.1_DATA.md)
-    - [flow](src/1.2_FLOW.md)
-    - [embedding](src/1.3_EMBEDDING.md)
-    - [model](src/1.4_MODEL.md)
-2. [post-training](src/2.0_POSTTRAINING.md)
-    - [data](src/2.1_DATA.md)
+```mermaid
+flowchart TD
+    A["Training set<br/>+ initialized/current weights"]
+    B["Run Flow<br/>predict next token<br/>compare with real data"]
+    C["Input text<br/>&quot;This is an&quot;"]
+    D["Generate input embeddings"]
+    E["Tokenized text<br/>&quot;Every&quot; | &quot; effort&quot; | &quot; moves&quot; | &quot; you&quot;"]
+    F["Token IDs<br/>6109 | 3626 | 6100 | 345"]
+    G["Token embeddings<br/>[[2.4][2.4][2.1]...]<br/>[[-2.6][1.3][2.1]...]<br/>[[2.0][1.8][-1.6]...]<br/>[[2.9][1.2][0.5]...]"]
+    H["Positional embeddings"]
+    I["Input embeddings<br/>token embeddings + positional embeddings"]
+
+    subgraph M["Model"]
+        J["Transformer block N×"]
+        K["Masked multi-head self attention<br/>future tokens masked"]
+        L["Attention weights example<br/>Your: 1.0000<br/>journey: 0.5517 | 0.4483<br/>starts: 0.3800 | 0.3097 | 0.3103"]
+        N["Layer normalization<br/>feed forward network<br/>GELU activation<br/>shortcut connections"]
+        O["Final layer normalization<br/>+ output projection"]
+    end
+
+    P["Logits<br/>[-0.4929, ..., 2.4812, ..., -0.6093]"]
+    Q["Softmax"]
+    R["Probabilities<br/>[0.0001, ..., 0.0200, ..., 0.0001]"]
+    S["Next token<br/>ID: 290<br/>&quot; and&quot;"]
+    T["Optimize weights<br/>minimize training loss"]
+    U["Post-training dataset"]
+    V["Supervised fine-tuning<br/>instruction tuning"]
+    W["Preference alignment<br/>RLHF / DPO"]
+    X["Optimized weights"]
+
+    A --> B --> C --> D --> E --> F --> G --> I
+    H --> I
+    I --> J --> K --> L --> N --> O --> P --> Q --> R --> S
+    S --> T --> B
+    T --> U --> V --> W --> X
+
+    click A "https://github.com/vielhuber/hellollm#pretraining-data" "Open pretraining data"
+    click B "https://github.com/vielhuber/hellollm#pretraining" "Open pretraining"
+    click C "https://github.com/vielhuber/hellollm#flow" "Open flow"
+    click D "https://github.com/vielhuber/hellollm#embedding" "Open embedding"
+    click E "https://github.com/vielhuber/hellollm#embedding" "Open embedding"
+    click F "https://github.com/vielhuber/hellollm#embedding" "Open embedding"
+    click G "https://github.com/vielhuber/hellollm#embedding" "Open embedding"
+    click H "https://github.com/vielhuber/hellollm#embedding" "Open embedding"
+    click I "https://github.com/vielhuber/hellollm#embedding" "Open embedding"
+    click J "https://github.com/vielhuber/hellollm#model" "Open model"
+    click K "https://github.com/vielhuber/hellollm#model" "Open model"
+    click L "https://github.com/vielhuber/hellollm#model" "Open model"
+    click N "https://github.com/vielhuber/hellollm#model" "Open model"
+    click O "https://github.com/vielhuber/hellollm#model" "Open model"
+    click P "https://github.com/vielhuber/hellollm#model" "Open model"
+    click Q "https://github.com/vielhuber/hellollm#model" "Open model"
+    click R "https://github.com/vielhuber/hellollm#model" "Open model"
+    click S "https://github.com/vielhuber/hellollm#model" "Open model"
+    click T "https://github.com/vielhuber/hellollm#pretraining" "Open pretraining"
+    click U "https://github.com/vielhuber/hellollm#post-training-data" "Open post-training data"
+    click V "https://github.com/vielhuber/hellollm#post-training" "Open post-training"
+    click W "https://github.com/vielhuber/hellollm#post-training" "Open post-training"
+    click X "https://github.com/vielhuber/hellollm#post-training" "Open post-training"
+```
+
+<a id="pretraining"></a>
+
+<details>
+<summary>1.0 Pretraining</summary>
+
+Source: [1.0_PRETRAINING.md](src/1.0_PRETRAINING.md)
+
+- Training set ([1.1_DATA.md](src/1.1_DATA.md)) + initialized/current weights
+- Run Flow ([1.2_FLOW.md](src/1.2_FLOW.md)) to predict next token and compare with real data
+- Optimize weights to minimize training loss
+- Repeat
+
+</details>
+
+<a id="pretraining-data"></a>
+
+<details>
+<summary>1.1 Data</summary>
+
+Source: [1.1_DATA.md](src/1.1_DATA.md)
+
+| Dataset      | Source                              | Size        |
+| ------------ | ----------------------------------- | ----------- |
+| Common Crawl | https://commoncrawl.org             | ~100.000 GB |
+| WebText2     | https://openwebtext2.readthedocs.io | ~70 GB      |
+| Wikipedia    | https://www.wikipedia.org           | ~100 GB     |
+| The Pile     | https://arxiv.org/abs/2101.00027    | ~1.000 GB   |
+| Books1/2     | unknown                             | unknown     |
+
+</details>
+
+<a id="flow"></a>
+
+<details>
+<summary>1.2 Flow</summary>
+
+Source: [1.2_FLOW.md](src/1.2_FLOW.md)
+
+- _"This is an"_
+- Generate input embeddings ([1.3_EMBEDDING.md](src/1.3_EMBEDDING.md))
+- Run model (transformer/decoder) ([1.4_MODEL.md](src/1.4_MODEL.md))
+- _"This is an example"_
+
+</details>
+
+<a id="embedding"></a>
+
+<details>
+<summary>1.3 Embedding</summary>
+
+Source: [1.3_EMBEDDING.md](src/1.3_EMBEDDING.md)
+
+- Input text: _"Every effort moves you"_
+- Tokenized text: `["Every"]` `[" effort"]` `[" moves"]` `[" you"]`
+- Token IDs: `[6109]` `[3626]` `[6100]` `[345]`
+- Token embeddings: `[[2.4][2.4][2.1]...]` `[[-2.6][1.3][2.1]...]` `[[2.0][1.8][-1.6]...]` `[[2.9][1.2][0.5]...]`
+- Positional embeddings
+- Input embeddings = token embeddings + positional embeddings
+
+</details>
+
+<a id="model"></a>
+
+<details>
+<summary>1.4 Model</summary>
+
+Source: [1.4_MODEL.md](src/1.4_MODEL.md)
+
+- Input embeddings: `[[2.4][2.4][2.1]...]` `[[-2.6][1.3][2.1]...]` `[[2.0][1.8][-1.6]...]` `[[2.9][1.2][0.5]...]`
+- Masked multi-head self attention
+- Attention weights example:
+
+```txt
+         Your     journey starts
+Your    [[1.0000, ------, ------],
+journey  [0.5517, 0.4483, ------],
+starts   [0.3800, 0.3097, 0.3103]]
+```
+
+- Layer normalization + GELU activation + Feed forward network + Shortcut connections
+- Outputs: `[[2.4][2.4][2.1]...]` `[[-2.6][1.3][2.1]...]` `[[2.0][1.8][-1.6]...]` `[[2.9][1.2][0.5]...]`
+- Final layer normalization + output projection (linear → vocabulary size)
+- Logits: `[-0.4929, ..., 2.4812, ..., -0.6093]`
+- Softmax
+- Probabilities: `[0.0001, ..., 0.0200, ..., 0.0001]`
+- Highest probability: 0.0200
+- Next ID: `290`
+- Next token: `" and"`
+
+</details>
+
+<a id="post-training"></a>
+
+<details>
+<summary>2.0 Post-training</summary>
+
+Source: [2.0_POSTTRAINING.md](src/2.0_POSTTRAINING.md)
+
+- Weights from pretraining + Post-training dataset ([2.1_DATA.md](src/2.1_DATA.md))
+- Supervised fine-tuning / instruction tuning
+- Preference alignment (RLHF / DPO, learn from "better vs. worse")
+- Optimized weights
+
+</details>
+
+<a id="post-training-data"></a>
+
+<details>
+<summary>2.1 Data</summary>
+
+Source: [2.1_DATA.md](src/2.1_DATA.md)
+
+```txt
+#1
+Q: Convert 45 kilometers to meters.
+A: 45 kilometers is 45,000 meters.
+
+#2
+Q: Provide a synonym for “bright.”
+A: A synonym for “bright” is “radiant.”
+
+#3
+Q: Remove passive voice in the sentence: “The song was composed by the artist.”
+A: The artist composed the song.
+```
+
+</details>
 
 ## links
 
