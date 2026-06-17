@@ -7,12 +7,12 @@ hellollm is a set of minimal, hand-written notes that explain how large language
 
 ## content
 
-1. [pretraining](src/1_PRETRAINING.md)
+1. [pretraining](src/1.0_PRETRAINING.md)
     - [data](src/1.1_DATA.md)
     - [flow](src/1.2_FLOW.md)
     - [embedding](src/1.3_EMBEDDING.md)
     - [model](src/1.4_MODEL.md)
-2. [post-training](src/2_POSTTRAINING.md)
+2. [post-training](src/2.0_POSTTRAINING.md)
     - [data](src/2.1_DATA.md)
 
 ## links
