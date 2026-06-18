@@ -22,8 +22,7 @@ flowchart TD
     subgraph PRE["<b>1.0 PRETRAINING</b>"]
         P0["<b>Initialized/current weights</b>"]
         P1["<b>Run Flow</b>"]
-        P1A["<b>Predict next token</b>"]
-        P1B["<b>Compare with real data</b>"]
+        P1B["<b>Compare next token with real data</b>"]
         P2["<b>Optimize weights</b><br/>minimize training loss"]
         P3["<b>Repeat</b>"]
         P4["<b>Final weights</b>"]
@@ -74,11 +73,11 @@ flowchart TD
     D3 --> D0
     D4 --> D0
     D5 --> D0
-    D0 --> P1
+    D0 --> P0
     P0 --> P1
     P1 --> F0 --> F1 --> E0 --> E1 --> E2 --> E3 --> E4 --> E5
     E5 --> F2 --> M0 --> M1 --> M2 --> M3 --> M4 --> M5 --> M6 --> M7 --> M8 --> M9 --> F3
-    F3 --> P1A --> P1B --> P2 --> P3 --> P0
+    F3 --> P1B --> P2 --> P3 --> P0
     P0 --> P4 --> T0
     T0 --> T1 --> T4
     T0 --> T2 --> T4
@@ -91,7 +90,7 @@ flowchart TD
     classDef model fill:#0f3a20,stroke:#3fb950,stroke-width:1px,color:#f0f6fc;
     classDef post fill:#4a1016,stroke:#f85149,stroke-width:1px,color:#f0f6fc;
     class D0,D1,D2,D3,D4,D5 data;
-    class P0,P1,P1A,P1B,P2,P3,P4,F0,F1,F2,F3 train;
+    class P0,P1,P1B,P2,P3,P4,F0,F1,F2,F3 train;
     class E0,E1,E2,E3,E4,E5 embed;
     class M0,M1,M2,M3,M4,M5,M6,M7,M8,M9 model;
     class T0,T1,T2,T3,T4,T5,T6,T7 post;
