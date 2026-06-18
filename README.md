@@ -8,7 +8,7 @@ hellollm is a set of minimal, hand-written notes that explain how large language
 ## content
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "12px", "fontFamily": "Arial", "primaryColor": "#f8fbff", "primaryTextColor": "#24292f", "primaryBorderColor": "#8c959f", "secondaryColor": "#f8fbff", "secondaryTextColor": "#24292f", "secondaryBorderColor": "#8c959f", "tertiaryColor": "#f8fbff", "tertiaryTextColor": "#24292f", "tertiaryBorderColor": "#8c959f", "clusterBkg": "#f8fbff", "clusterBorder": "#eaeef2", "titleColor": "#57606a", "lineColor": "#57606a"}, "flowchart": {"htmlLabels": true, "nodeSpacing": 30, "rankSpacing": 44, "curve": "basis"}}}%%
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "12px", "fontFamily": "Arial", "primaryColor": "#161b22", "primaryTextColor": "#f0f6fc", "primaryBorderColor": "#30363d", "secondaryColor": "#161b22", "secondaryTextColor": "#f0f6fc", "secondaryBorderColor": "#30363d", "tertiaryColor": "#161b22", "tertiaryTextColor": "#f0f6fc", "tertiaryBorderColor": "#30363d", "clusterBkg": "#0d1117", "clusterBorder": "#30363d", "titleColor": "#c9d1d9", "lineColor": "#8b949e", "edgeLabelBackground": "#0d1117"}, "flowchart": {"htmlLabels": true, "nodeSpacing": 30, "rankSpacing": 44, "curve": "basis"}}}%%
 flowchart TD
     subgraph DATA["1.1 Data"]
         D0["Training set"]
@@ -82,11 +82,11 @@ flowchart TD
     T0 --> T3 --> T4
     T4 --> T5 --> T6
 
-    classDef data fill:#f6f8fa,stroke:#8c959f,stroke-width:1px,color:#24292f;
-    classDef train fill:#fff8c5,stroke:#9a6700,stroke-width:1px,color:#24292f;
-    classDef embed fill:#ddf4ff,stroke:#0969da,stroke-width:1px,color:#24292f;
-    classDef model fill:#dafbe1,stroke:#1a7f37,stroke-width:1px,color:#24292f;
-    classDef post fill:#ffebe9,stroke:#cf222e,stroke-width:1px,color:#24292f;
+    classDef data fill:#161b22,stroke:#8b949e,stroke-width:1px,color:#f0f6fc;
+    classDef train fill:#3b2e00,stroke:#d29922,stroke-width:1px,color:#f0f6fc;
+    classDef embed fill:#0c2d6b,stroke:#58a6ff,stroke-width:1px,color:#f0f6fc;
+    classDef model fill:#0f3a20,stroke:#3fb950,stroke-width:1px,color:#f0f6fc;
+    classDef post fill:#4a1016,stroke:#f85149,stroke-width:1px,color:#f0f6fc;
     class D0,D1,D2,D3,D4,D5 data;
     class P0,P1,P2,P3,F0,F1,F2,F3 train;
     class E0,E1,E2,E3,E4,E5 embed;
