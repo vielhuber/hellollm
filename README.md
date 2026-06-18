@@ -8,191 +8,96 @@ hellollm is a set of minimal, hand-written notes that explain how large language
 ## content
 
 ```mermaid
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "12px", "fontFamily": "Arial", "primaryColor": "#f8fbff", "primaryTextColor": "#1f2328", "primaryBorderColor": "#7d8590", "secondaryColor": "#fff8dc", "secondaryTextColor": "#1f2328", "secondaryBorderColor": "#d4a72c", "tertiaryColor": "#f6f8fa", "tertiaryTextColor": "#1f2328", "tertiaryBorderColor": "#8c959f", "lineColor": "#57606a"}, "flowchart": {"htmlLabels": true, "nodeSpacing": 28, "rankSpacing": 42, "curve": "basis"}}}%%
 flowchart TD
-    A["Training set<br/>+ initialized/current weights"]
-    B["Run Flow<br/>predict next token<br/>compare with real data"]
-    C["Input text<br/>&quot;This is an&quot;"]
-    D["Generate input embeddings"]
-    E["Tokenized text<br/>&quot;Every&quot; | &quot; effort&quot; | &quot; moves&quot; | &quot; you&quot;"]
-    F["Token IDs<br/>6109 | 3626 | 6100 | 345"]
-    G["Token embeddings<br/>[[2.4][2.4][2.1]...]<br/>[[-2.6][1.3][2.1]...]<br/>[[2.0][1.8][-1.6]...]<br/>[[2.9][1.2][0.5]...]"]
-    H["Positional embeddings"]
-    I["Input embeddings<br/>token embeddings + positional embeddings"]
-
-    subgraph M["Model"]
-        J["Transformer block N×"]
-        K["Masked multi-head self attention<br/>future tokens masked"]
-        L["Attention weights example<br/>Your: 1.0000<br/>journey: 0.5517 | 0.4483<br/>starts: 0.3800 | 0.3097 | 0.3103"]
-        N["Layer normalization<br/>feed forward network<br/>GELU activation<br/>shortcut connections"]
-        O["Final layer normalization<br/>+ output projection"]
+    subgraph DATA["1.1 Data"]
+        D0["Training set"]
+        D1["Common Crawl<br/>https://commoncrawl.org<br/>~100.000 GB"]
+        D2["WebText2<br/>https://openwebtext2.readthedocs.io<br/>~70 GB"]
+        D3["Wikipedia<br/>https://www.wikipedia.org<br/>~100 GB"]
+        D4["The Pile<br/>https://arxiv.org/abs/2101.00027<br/>~1.000 GB"]
+        D5["Books1/2<br/>unknown<br/>unknown"]
     end
 
-    P["Logits<br/>[-0.4929, ..., 2.4812, ..., -0.6093]"]
-    Q["Softmax"]
-    R["Probabilities<br/>[0.0001, ..., 0.0200, ..., 0.0001]"]
-    S["Next token<br/>ID: 290<br/>&quot; and&quot;"]
-    T["Optimize weights<br/>minimize training loss"]
-    U["Post-training dataset"]
-    V["Supervised fine-tuning<br/>instruction tuning"]
-    W["Preference alignment<br/>RLHF / DPO"]
-    X["Optimized weights"]
+    subgraph PRE["1.0 Pretraining"]
+        P0["Initialized/current weights"]
+        P1["Run Flow<br/>predict next token<br/>compare with real data"]
+        P2["Optimize weights<br/>minimize training loss"]
+        P3["Repeat"]
+    end
 
-    A --> B --> C --> D --> E --> F --> G --> I
-    H --> I
-    I --> J --> K --> L --> N --> O --> P --> Q --> R --> S
-    S --> T --> B
-    T --> U --> V --> W --> X
+    subgraph FLOW["1.2 Flow"]
+        F0["Prompt<br/>&quot;This is an&quot;"]
+        F1["Generate input embeddings"]
+        F2["Run model<br/>transformer / decoder"]
+        F3["Generated text<br/>&quot;This is an example&quot;"]
+    end
 
-    click A "https://github.com/vielhuber/hellollm#user-content-pretraining-data" "Open pretraining data"
-    click B "https://github.com/vielhuber/hellollm#user-content-pretraining" "Open pretraining"
-    click C "https://github.com/vielhuber/hellollm#user-content-flow" "Open flow"
-    click D "https://github.com/vielhuber/hellollm#user-content-embedding" "Open embedding"
-    click E "https://github.com/vielhuber/hellollm#user-content-embedding" "Open embedding"
-    click F "https://github.com/vielhuber/hellollm#user-content-embedding" "Open embedding"
-    click G "https://github.com/vielhuber/hellollm#user-content-embedding" "Open embedding"
-    click H "https://github.com/vielhuber/hellollm#user-content-embedding" "Open embedding"
-    click I "https://github.com/vielhuber/hellollm#user-content-embedding" "Open embedding"
-    click J "https://github.com/vielhuber/hellollm#user-content-model" "Open model"
-    click K "https://github.com/vielhuber/hellollm#user-content-model" "Open model"
-    click L "https://github.com/vielhuber/hellollm#user-content-model" "Open model"
-    click N "https://github.com/vielhuber/hellollm#user-content-model" "Open model"
-    click O "https://github.com/vielhuber/hellollm#user-content-model" "Open model"
-    click P "https://github.com/vielhuber/hellollm#user-content-model" "Open model"
-    click Q "https://github.com/vielhuber/hellollm#user-content-model" "Open model"
-    click R "https://github.com/vielhuber/hellollm#user-content-model" "Open model"
-    click S "https://github.com/vielhuber/hellollm#user-content-model" "Open model"
-    click T "https://github.com/vielhuber/hellollm#user-content-pretraining" "Open pretraining"
-    click U "https://github.com/vielhuber/hellollm#user-content-post-training-data" "Open post-training data"
-    click V "https://github.com/vielhuber/hellollm#user-content-post-training" "Open post-training"
-    click W "https://github.com/vielhuber/hellollm#user-content-post-training" "Open post-training"
-    click X "https://github.com/vielhuber/hellollm#user-content-post-training" "Open post-training"
+    subgraph EMB["1.3 Embedding"]
+        E0["Input text<br/>&quot;Every effort moves you&quot;"]
+        E1["Tokenized text<br/>&quot;Every&quot; | &quot; effort&quot; | &quot; moves&quot; | &quot; you&quot;"]
+        E2["Token IDs<br/>6109 | 3626 | 6100 | 345"]
+        E3["Token embeddings<br/>[[2.4][2.4][2.1]...]<br/>[[-2.6][1.3][2.1]...]<br/>[[2.0][1.8][-1.6]...]<br/>[[2.9][1.2][0.5]...]"]
+        E4["Positional embeddings"]
+        E5["Input embeddings<br/>token embeddings + positional embeddings"]
+    end
+
+    subgraph MODEL["1.4 Model"]
+        M0["Input embeddings<br/>[[2.4][2.4][2.1]...]<br/>[[-2.6][1.3][2.1]...]<br/>[[2.0][1.8][-1.6]...]<br/>[[2.9][1.2][0.5]...]"]
+        M1["Masked multi-head self attention"]
+        M2["Attention weights example<br/>Your: 1.0000<br/>journey: 0.5517 | 0.4483<br/>starts: 0.3800 | 0.3097 | 0.3103"]
+        M3["Layer normalization<br/>GELU activation<br/>Feed forward network<br/>Shortcut connections"]
+        M4["Outputs<br/>[[2.4][2.4][2.1]...]<br/>[[-2.6][1.3][2.1]...]<br/>[[2.0][1.8][-1.6]...]<br/>[[2.9][1.2][0.5]...]"]
+        M5["Final layer normalization<br/>+ output projection<br/>linear → vocabulary size"]
+        M6["Logits<br/>[-0.4929, ..., 2.4812, ..., -0.6093]"]
+        M7["Softmax"]
+        M8["Probabilities<br/>[0.0001, ..., 0.0200, ..., 0.0001]"]
+        M9["Highest probability: 0.0200<br/>Next ID: 290<br/>Next token: &quot; and&quot;"]
+    end
+
+    subgraph POST["2.0 / 2.1 Post-training"]
+        T0["Weights from pretraining<br/>+ post-training dataset"]
+        T1["Example #1<br/>Q: Convert 45 kilometers to meters.<br/>A: 45 kilometers is 45,000 meters."]
+        T2["Example #2<br/>Q: Provide a synonym for bright.<br/>A: A synonym for bright is radiant."]
+        T3["Example #3<br/>Q: Remove passive voice.<br/>A: The artist composed the song."]
+        T4["Supervised fine-tuning<br/>instruction tuning"]
+        T5["Preference alignment<br/>RLHF / DPO<br/>learn from better vs. worse"]
+        T6["Optimized weights"]
+    end
+
+    D1 --> D0
+    D2 --> D0
+    D3 --> D0
+    D4 --> D0
+    D5 --> D0
+    D0 --> P1
+    P0 --> P1
+    P1 --> F0 --> F1 --> E0 --> E1 --> E2 --> E3 --> E5
+    E4 --> E5
+    E5 --> F2 --> M0 --> M1 --> M2 --> M3 --> M4 --> M5 --> M6 --> M7 --> M8 --> M9 --> F3
+    F3 --> P2 --> P3 --> P1
+    P2 --> T0
+    T0 --> T1 --> T4
+    T0 --> T2 --> T4
+    T0 --> T3 --> T4
+    T4 --> T5 --> T6
+
+    classDef data fill:#f6f8fa,stroke:#8c959f,color:#1f2328;
+    classDef train fill:#fff8dc,stroke:#d4a72c,color:#1f2328;
+    classDef embed fill:#ddf4ff,stroke:#0969da,color:#1f2328;
+    classDef model fill:#dafbe1,stroke:#1a7f37,color:#1f2328;
+    classDef post fill:#ffebe9,stroke:#cf222e,color:#1f2328;
+    class D0,D1,D2,D3,D4,D5 data;
+    class P0,P1,P2,P3,F0,F1,F2,F3 train;
+    class E0,E1,E2,E3,E4,E5 embed;
+    class M0,M1,M2,M3,M4,M5,M6,M7,M8,M9 model;
+    class T0,T1,T2,T3,T4,T5,T6 post;
 ```
 
 <details>
-<summary>1.0 Pretraining</summary>
+<summary>source files</summary>
 
-<a id="pretraining"></a>
-
-Source: [1.0_PRETRAINING.md](src/1.0_PRETRAINING.md)
-
-- Training set ([1.1_DATA.md](src/1.1_DATA.md)) + initialized/current weights
-- Run Flow ([1.2_FLOW.md](src/1.2_FLOW.md)) to predict next token and compare with real data
-- Optimize weights to minimize training loss
-- Repeat
-
-</details>
-
-<details>
-<summary>1.1 Data</summary>
-
-<a id="pretraining-data"></a>
-
-Source: [1.1_DATA.md](src/1.1_DATA.md)
-
-| Dataset      | Source                              | Size        |
-| ------------ | ----------------------------------- | ----------- |
-| Common Crawl | https://commoncrawl.org             | ~100.000 GB |
-| WebText2     | https://openwebtext2.readthedocs.io | ~70 GB      |
-| Wikipedia    | https://www.wikipedia.org           | ~100 GB     |
-| The Pile     | https://arxiv.org/abs/2101.00027    | ~1.000 GB   |
-| Books1/2     | unknown                             | unknown     |
-
-</details>
-
-<details>
-<summary>1.2 Flow</summary>
-
-<a id="flow"></a>
-
-Source: [1.2_FLOW.md](src/1.2_FLOW.md)
-
-- _"This is an"_
-- Generate input embeddings ([1.3_EMBEDDING.md](src/1.3_EMBEDDING.md))
-- Run model (transformer/decoder) ([1.4_MODEL.md](src/1.4_MODEL.md))
-- _"This is an example"_
-
-</details>
-
-<details>
-<summary>1.3 Embedding</summary>
-
-<a id="embedding"></a>
-
-Source: [1.3_EMBEDDING.md](src/1.3_EMBEDDING.md)
-
-- Input text: _"Every effort moves you"_
-- Tokenized text: `["Every"]` `[" effort"]` `[" moves"]` `[" you"]`
-- Token IDs: `[6109]` `[3626]` `[6100]` `[345]`
-- Token embeddings: `[[2.4][2.4][2.1]...]` `[[-2.6][1.3][2.1]...]` `[[2.0][1.8][-1.6]...]` `[[2.9][1.2][0.5]...]`
-- Positional embeddings
-- Input embeddings = token embeddings + positional embeddings
-
-</details>
-
-<details>
-<summary>1.4 Model</summary>
-
-<a id="model"></a>
-
-Source: [1.4_MODEL.md](src/1.4_MODEL.md)
-
-- Input embeddings: `[[2.4][2.4][2.1]...]` `[[-2.6][1.3][2.1]...]` `[[2.0][1.8][-1.6]...]` `[[2.9][1.2][0.5]...]`
-- Masked multi-head self attention
-- Attention weights example:
-
-```txt
-         Your     journey starts
-Your    [[1.0000, ------, ------],
-journey  [0.5517, 0.4483, ------],
-starts   [0.3800, 0.3097, 0.3103]]
-```
-
-- Layer normalization + GELU activation + Feed forward network + Shortcut connections
-- Outputs: `[[2.4][2.4][2.1]...]` `[[-2.6][1.3][2.1]...]` `[[2.0][1.8][-1.6]...]` `[[2.9][1.2][0.5]...]`
-- Final layer normalization + output projection (linear → vocabulary size)
-- Logits: `[-0.4929, ..., 2.4812, ..., -0.6093]`
-- Softmax
-- Probabilities: `[0.0001, ..., 0.0200, ..., 0.0001]`
-- Highest probability: 0.0200
-- Next ID: `290`
-- Next token: `" and"`
-
-</details>
-
-<details>
-<summary>2.0 Post-training</summary>
-
-<a id="post-training"></a>
-
-Source: [2.0_POSTTRAINING.md](src/2.0_POSTTRAINING.md)
-
-- Weights from pretraining + Post-training dataset ([2.1_DATA.md](src/2.1_DATA.md))
-- Supervised fine-tuning / instruction tuning
-- Preference alignment (RLHF / DPO, learn from "better vs. worse")
-- Optimized weights
-
-</details>
-
-<details>
-<summary>2.1 Data</summary>
-
-<a id="post-training-data"></a>
-
-Source: [2.1_DATA.md](src/2.1_DATA.md)
-
-```txt
-#1
-Q: Convert 45 kilometers to meters.
-A: 45 kilometers is 45,000 meters.
-
-#2
-Q: Provide a synonym for “bright.”
-A: A synonym for “bright” is “radiant.”
-
-#3
-Q: Remove passive voice in the sentence: “The song was composed by the artist.”
-A: The artist composed the song.
-```
+[1.0_PRETRAINING.md](src/1.0_PRETRAINING.md) · [1.1_DATA.md](src/1.1_DATA.md) · [1.2_FLOW.md](src/1.2_FLOW.md) · [1.3_EMBEDDING.md](src/1.3_EMBEDDING.md) · [1.4_MODEL.md](src/1.4_MODEL.md) · [2.0_POSTTRAINING.md](src/2.0_POSTTRAINING.md) · [2.1_DATA.md](src/2.1_DATA.md)
 
 </details>
 
