@@ -3,14 +3,14 @@
 
 # 🫙 hellollm 🫙
 
-hellollm is a single GitHub-rendered Mermaid architecture diagram that explains how large language models work from raw text through pretraining, embedding, model execution, next-token prediction and post-training.
+hellollm is a compact learning map for understanding large language models from the ground up. it keeps the whole process in one github-rendered mermaid architecture diagram: raw text becomes a training set, weights are trained through next-token prediction, text is transformed into embeddings, the transformer produces probabilities, post-training adapts the model to useful answers, and the final weights can be converted into gguf files for local inference.
 
 ## architecture
 
 ```mermaid
 %%{init: {"theme": "base", "themeVariables": {"fontSize": "12px", "fontFamily": "Courier New", "primaryColor": "#161b22", "primaryTextColor": "#f0f6fc", "primaryBorderColor": "#30363d", "secondaryColor": "#161b22", "secondaryTextColor": "#f0f6fc", "secondaryBorderColor": "#30363d", "tertiaryColor": "#161b22", "tertiaryTextColor": "#f0f6fc", "tertiaryBorderColor": "#30363d", "clusterBkg": "#0d1117", "clusterBorder": "#30363d", "titleColor": "#c9d1d9", "lineColor": "#8b949e", "edgeLabelBackground": "#0d1117"}, "flowchart": {"htmlLabels": true, "nodeSpacing": 30, "rankSpacing": 44, "curve": "basis"}}}%%
 flowchart TD
-    subgraph DATA["<b>1.1 DATA</b>"]
+    subgraph DATA["<b>DATA</b>"]
         D0["<b>Training set</b>"]
         D1["<b>Common Crawl</b><br/>https://commoncrawl.org<br/>~100.000 GB"]
         D2["<b>WebText2</b><br/>https://openwebtext2.readthedocs.io<br/>~70 GB"]
@@ -19,7 +19,7 @@ flowchart TD
         D5["<b>Books1/2</b><br/>unknown size/source"]
     end
 
-    subgraph PRE["<b>1.0 PRETRAINING</b>"]
+    subgraph PRE["<b>PRETRAINING</b>"]
         P0["<b>Initialized/current weights</b>"]
         P1["<b>Run Flow</b>"]
         P1B["<b>Compare next token with real data</b>"]
@@ -28,14 +28,14 @@ flowchart TD
         P4["<b>Final weights</b>"]
     end
 
-    subgraph FLOW["<b>1.2 FLOW</b>"]
+    subgraph FLOW["<b>FLOW</b>"]
         F0["<b>Prompt</b><br/>&quot;This is an&quot;"]
         F1["<b>Generate input embeddings</b>"]
         F2["<b>Run model</b><br/>transformer / decoder"]
         F3["<b>Generated text</b><br/>&quot;This is an example&quot;"]
     end
 
-    subgraph EMB["<b>1.3 EMBEDDING</b>"]
+    subgraph EMB["<b>EMBEDDING</b>"]
         E0["<b>Input text</b><br/>&quot;Every effort moves you&quot;"]
         E1["<b>Tokenized text</b><br/>&quot;Every&quot; | &quot; effort&quot; | &quot; moves&quot; | &quot; you&quot;"]
         E2["<b>Token IDs</b><br/>6109 | 3626 | 6100 | 345"]
@@ -44,7 +44,7 @@ flowchart TD
         E5["<b>Input embeddings</b><br/>token embeddings + positional embeddings"]
     end
 
-    subgraph MODEL["<b>1.4 MODEL</b>"]
+    subgraph MODEL["<b>MODEL</b>"]
         M0["<b>Input embeddings</b><br/>[[2.4][2.4][2.1]...]<br/>[[-2.6][1.3][2.1]...]<br/>[[2.0][1.8][-1.6]...]<br/>[[2.9][1.2][0.5]...]"]
         M1["<b>Transformer block N×</b><br/>masked multi-head self attention<br/>causal: future tokens masked"]
         M2["<b>Attention weights example</b><br/>Your: 1.0000<br/>journey: 0.5517 | 0.4483<br/>starts: 0.3800 | 0.3097 | 0.3103"]
@@ -57,14 +57,14 @@ flowchart TD
         M9["<b>Highest probability: 0.0200</b><br/>Next ID: 290<br/>Next token: &quot; and&quot;"]
     end
 
-    subgraph POSTDATA["<b>2.2 DATA</b>"]
+    subgraph POSTDATA["<b>DATA</b>"]
         T8["<b>Training set</b>"]
         T1["<b>Example #1</b><br/>Q: Convert 45 kilometers to meters.<br/>A: 45 kilometers is 45,000 meters."]
         T2["<b>Example #2</b><br/>Q: Provide a synonym for bright.<br/>A: A synonym for bright is radiant."]
         T3["<b>Example #3</b><br/>Q: Remove passive voice in:<br/>&quot;The song was composed by the artist.&quot;<br/>A: The artist composed the song."]
     end
 
-    subgraph POST["<b>2.0 / 2.1 POST-TRAINING</b>"]
+    subgraph POST["<b>POST-TRAINING</b>"]
         T0["<b>Weights from pretraining</b>"]
         T9["<b>Run post-training flow</b>"]
         T4["<b>Supervised fine-tuning</b><br/>instruction tuning"]
