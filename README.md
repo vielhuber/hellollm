@@ -96,7 +96,10 @@ flowchart TD
 
 ### variant: single block
 
-```mermaid
+<details>
+<summary>single block draft</summary>
+
+```txt
 flowchart TD
     SB_D1["1.1 Data<br/>Common Crawl<br/>https://commoncrawl.org<br/>~100.000 GB"]
     SB_D2["1.1 Data<br/>WebText2<br/>https://openwebtext2.readthedocs.io<br/>~70 GB"]
@@ -153,6 +156,8 @@ flowchart TD
     SB_T0 --> SB_T3 --> SB_T4
     SB_T4 --> SB_T5 --> SB_T6
 ```
+
+</details>
 
 <details>
 <summary>source files</summary>
