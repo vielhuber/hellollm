@@ -8,7 +8,7 @@ hellollm is a set of minimal, hand-written notes that explain how large language
 ## content
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "12px", "fontFamily": "Arial", "background": "transparent", "mainBkg": "#f6f8fa", "secondBkg": "#f6f8fa", "tertiaryColor": "#f6f8fa", "primaryColor": "#f6f8fa", "primaryTextColor": "#24292f", "primaryBorderColor": "#8c959f", "secondaryColor": "#f6f8fa", "secondaryTextColor": "#24292f", "secondaryBorderColor": "#8c959f", "tertiaryTextColor": "#24292f", "tertiaryBorderColor": "#8c959f", "clusterBkg": "#ffffff10", "clusterBorder": "#8c959f", "titleColor": "#57606a", "lineColor": "#57606a", "edgeLabelBackground": "#ffffffcc"}, "flowchart": {"htmlLabels": true, "nodeSpacing": 30, "rankSpacing": 44, "curve": "basis"}}}%%
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "12px", "fontFamily": "Arial", "primaryColor": "#f6f8fa", "primaryTextColor": "#24292f", "primaryBorderColor": "#8c959f", "secondaryColor": "#f6f8fa", "secondaryTextColor": "#24292f", "secondaryBorderColor": "#8c959f", "tertiaryColor": "#f6f8fa", "tertiaryTextColor": "#24292f", "tertiaryBorderColor": "#8c959f", "clusterBkg": "#f6f8fa", "clusterBorder": "#d0d7de", "titleColor": "#57606a", "lineColor": "#57606a"}, "flowchart": {"htmlLabels": true, "nodeSpacing": 30, "rankSpacing": 44, "curve": "basis"}}}%%
 flowchart TD
     subgraph DATA["1.1 Data"]
         D0["Training set"]
