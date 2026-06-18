@@ -8,7 +8,7 @@ hellollm is a set of minimal, hand-written notes that explain how large language
 ## content
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "12px", "fontFamily": "Arial", "primaryColor": "#f6f8fa", "primaryTextColor": "#24292f", "primaryBorderColor": "#8c959f", "secondaryColor": "#f6f8fa", "secondaryTextColor": "#24292f", "secondaryBorderColor": "#8c959f", "tertiaryColor": "#f6f8fa", "tertiaryTextColor": "#24292f", "tertiaryBorderColor": "#8c959f", "clusterBkg": "#f6f8fa", "clusterBorder": "#d0d7de", "titleColor": "#57606a", "lineColor": "#57606a"}, "flowchart": {"htmlLabels": true, "nodeSpacing": 30, "rankSpacing": 44, "curve": "basis"}}}%%
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "12px", "fontFamily": "Arial", "primaryColor": "#f8fbff", "primaryTextColor": "#24292f", "primaryBorderColor": "#8c959f", "secondaryColor": "#f8fbff", "secondaryTextColor": "#24292f", "secondaryBorderColor": "#8c959f", "tertiaryColor": "#f8fbff", "tertiaryTextColor": "#24292f", "tertiaryBorderColor": "#8c959f", "clusterBkg": "#f8fbff", "clusterBorder": "#eaeef2", "titleColor": "#57606a", "lineColor": "#57606a"}, "flowchart": {"htmlLabels": true, "nodeSpacing": 30, "rankSpacing": 44, "curve": "basis"}}}%%
 flowchart TD
     subgraph DATA["1.1 Data"]
         D0["Training set"]
