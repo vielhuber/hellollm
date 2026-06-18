@@ -153,8 +153,8 @@ mindmap
       "Every | effort | moves | you"
       "6109 | 3626 | 6100 | 345"
       token embeddings
-        "[[2.4][2.4][2.1]...]"
-        "[[-2.6][1.3][2.1]...]"
+        "2.4, 2.4, 2.1, ..."
+        "-2.6, 1.3, 2.1, ..."
       positional embeddings
       input embeddings
     1.4 Model
