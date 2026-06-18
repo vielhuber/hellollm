@@ -57,15 +57,21 @@ flowchart TD
         M9["<b>Highest probability: 0.0200</b><br/>Next ID: 290<br/>Next token: &quot; and&quot;"]
     end
 
-    subgraph POST["<b>2.0 / 2.1 POST-TRAINING</b>"]
-        T0["<b>Weights from pretraining</b><br/>+ post-training dataset"]
+    subgraph POSTDATA["<b>2.2 DATA</b>"]
+        T8["<b>Training set</b>"]
         T1["<b>Example #1</b><br/>Q: Convert 45 kilometers to meters.<br/>A: 45 kilometers is 45,000 meters."]
         T2["<b>Example #2</b><br/>Q: Provide a synonym for bright.<br/>A: A synonym for bright is radiant."]
         T3["<b>Example #3</b><br/>Q: Remove passive voice in:<br/>&quot;The song was composed by the artist.&quot;<br/>A: The artist composed the song."]
+    end
+
+    subgraph POST["<b>2.0 / 2.1 POST-TRAINING</b>"]
+        T0["<b>Weights from pretraining</b>"]
+        T9["<b>Run post-training flow</b>"]
         T4["<b>Supervised fine-tuning</b><br/>instruction tuning"]
         T5["<b>Preference alignment</b><br/>RLHF / DPO<br/>learn from better vs. worse"]
-        T6["<b>Optimized weights</b>"]
+        T6["<b>Final weights</b>"]
         T7["<b>Repeat</b>"]
+        T10["<b>GGUF files</b><br/>convert weights into a compact file<br/>for local inference"]
     end
 
     D1 --> D0
@@ -79,10 +85,15 @@ flowchart TD
     E5 --> F2 --> M0 --> M1 --> M2 --> M3 --> M4 --> M5 --> M6 --> M7 --> M8 --> M9 --> F3
     F3 --> P1B --> P2 --> P3 --> P0
     P3 --> P4 --> T0
-    T0 --> T1 --> T4
-    T0 --> T2 --> T4
-    T0 --> T3 --> T4
-    T4 --> T5 --> T6 --> T7 --> T4
+    T1 --> T8
+    T2 --> T8
+    T3 --> T8
+    T0 --> T9
+    T8 --> T9
+    T9 --> T4
+    T4 --> T5 --> T7
+    T7 --> T9
+    T7 --> T6 --> T10
 
     classDef data fill:#261a3d,stroke:#a371f7,stroke-width:1px,color:#f0f6fc;
     classDef train fill:#3b2e00,stroke:#d29922,stroke-width:1px,color:#f0f6fc;
@@ -93,7 +104,8 @@ flowchart TD
     class P0,P1,P1B,P2,P3,P4,F0,F1,F2,F3 train;
     class E0,E1,E2,E3,E4,E5 embed;
     class M0,M1,M2,M3,M4,M5,M6,M7,M8,M9 model;
-    class T0,T1,T2,T3,T4,T5,T6,T7 post;
+    class T1,T2,T3,T8 data;
+    class T0,T4,T5,T6,T7,T9,T10 post;
 
     click D1 "https://commoncrawl.org" "Open Common Crawl"
     click D2 "https://openwebtext2.readthedocs.io" "Open WebText2"
