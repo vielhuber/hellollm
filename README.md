@@ -12,14 +12,10 @@ hellollm is a single GitHub-rendered Mermaid architecture diagram that explains 
 flowchart TD
     subgraph DATA["<b>1.1 DATA</b>"]
         D0["Training set"]
-        D1["Common Crawl<br/>~100.000 GB"]
-        D1L["https://commoncrawl.org"]
-        D2["WebText2<br/>~70 GB"]
-        D2L["https://openwebtext2.readthedocs.io"]
-        D3["Wikipedia<br/>~100 GB"]
-        D3L["https://www.wikipedia.org"]
-        D4["The Pile<br/>~1.000 GB"]
-        D4L["https://arxiv.org/abs/2101.00027"]
+        D1["Common Crawl<br/>https://commoncrawl.org<br/>~100.000 GB"]
+        D2["WebText2<br/>https://openwebtext2.readthedocs.io<br/>~70 GB"]
+        D3["Wikipedia<br/>https://www.wikipedia.org<br/>~100 GB"]
+        D4["The Pile<br/>https://arxiv.org/abs/2101.00027<br/>~1.000 GB"]
         D5["Books1/2<br/>unknown<br/>unknown"]
     end
 
@@ -69,6 +65,7 @@ flowchart TD
         T4["Supervised fine-tuning<br/>instruction tuning"]
         T5["Preference alignment<br/>RLHF / DPO<br/>learn from better vs. worse"]
         T6["Optimized weights"]
+        T7["Repeat"]
     end
 
     D1 --> D0
@@ -76,39 +73,32 @@ flowchart TD
     D3 --> D0
     D4 --> D0
     D5 --> D0
-    D1 -.-> D1L
-    D2 -.-> D2L
-    D3 -.-> D3L
-    D4 -.-> D4L
     D0 --> P1
     P0 --> P1
-    P1 --> F0 --> F1 --> E0 --> E1 --> E2 --> E3 --> E5
-    E4 --> E5
+    P1 --> F0 --> F1 --> E0 --> E1 --> E2 --> E3 --> E4 --> E5
     E5 --> F2 --> M0 --> M1 --> M2 --> M3 --> M4 --> M5 --> M6 --> M7 --> M8 --> P1A --> M9 --> F3
     M9 --> P1B --> P2 --> P3 --> P1
     P2 --> T0
     T0 --> T1 --> T4
     T0 --> T2 --> T4
     T0 --> T3 --> T4
-    T4 --> T5 --> T6
+    T4 --> T5 --> T6 --> T7 --> T4
 
     classDef data fill:#261a3d,stroke:#a371f7,stroke-width:1px,color:#f0f6fc;
-    classDef link fill:#161b22,stroke:#a371f7,stroke-width:1px,color:#f0f6fc;
     classDef train fill:#3b2e00,stroke:#d29922,stroke-width:1px,color:#f0f6fc;
     classDef embed fill:#0c2d6b,stroke:#58a6ff,stroke-width:1px,color:#f0f6fc;
     classDef model fill:#0f3a20,stroke:#3fb950,stroke-width:1px,color:#f0f6fc;
     classDef post fill:#4a1016,stroke:#f85149,stroke-width:1px,color:#f0f6fc;
     class D0,D1,D2,D3,D4,D5 data;
-    class D1L,D2L,D3L,D4L link;
     class P0,P1,P1A,P1B,P2,P3,F0,F1,F2,F3 train;
     class E0,E1,E2,E3,E4,E5 embed;
     class M0,M1,M2,M3,M4,M5,M6,M7,M8,M9 model;
-    class T0,T1,T2,T3,T4,T5,T6 post;
+    class T0,T1,T2,T3,T4,T5,T6,T7 post;
 
-    click D1L "https://commoncrawl.org" "Open Common Crawl"
-    click D2L "https://openwebtext2.readthedocs.io" "Open WebText2"
-    click D3L "https://www.wikipedia.org" "Open Wikipedia"
-    click D4L "https://arxiv.org/abs/2101.00027" "Open The Pile"
+    click D1 "https://commoncrawl.org" "Open Common Crawl"
+    click D2 "https://openwebtext2.readthedocs.io" "Open WebText2"
+    click D3 "https://www.wikipedia.org" "Open Wikipedia"
+    click D4 "https://arxiv.org/abs/2101.00027" "Open The Pile"
 ```
 
 ## links
