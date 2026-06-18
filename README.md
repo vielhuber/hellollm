@@ -94,6 +94,112 @@ flowchart TD
     class T0,T1,T2,T3,T4,T5,T6 post;
 ```
 
+### variant 1: horizontal phases
+
+```mermaid
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "12px", "fontFamily": "Arial"}, "flowchart": {"htmlLabels": true, "nodeSpacing": 24, "rankSpacing": 34, "curve": "basis"}}}%%
+flowchart LR
+    subgraph DATA["1.1 Data"]
+        D["Training set"]
+        DS["Common Crawl ~100.000 GB<br/>WebText2 ~70 GB<br/>Wikipedia ~100 GB<br/>The Pile ~1.000 GB<br/>Books1/2 unknown"]
+        DS --> D
+    end
+
+    subgraph PRE["1.0 Pretraining"]
+        P["Initialized/current weights<br/>predict next token<br/>compare with real data<br/>minimize training loss<br/>repeat"]
+    end
+
+    subgraph EMB["1.3 Embedding"]
+        E["Every effort moves you<br/>→ Every | effort | moves | you<br/>→ 6109 | 3626 | 6100 | 345<br/>→ token embeddings + positional embeddings"]
+    end
+
+    subgraph MODEL["1.4 Model"]
+        M["Masked multi-head self attention<br/>LayerNorm + FFN + GELU + shortcuts<br/>Final LayerNorm + output projection<br/>logits → softmax → probabilities<br/>next ID 290 → &quot; and&quot;"]
+    end
+
+    subgraph POST["2.0 / 2.1 Post-training"]
+        T["instruction examples<br/>supervised fine-tuning<br/>preference alignment RLHF / DPO<br/>optimized weights"]
+    end
+
+    D --> P --> E --> MODEL --> POST
+    P -. loop .-> P
+```
+
+### variant 6: mindmap
+
+```mermaid
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "13px", "fontFamily": "Arial"}}}%%
+mindmap
+  root((hellollm))
+    1.0 Pretraining
+      Training set
+        Common Crawl ~100.000 GB
+        WebText2 ~70 GB
+        Wikipedia ~100 GB
+        The Pile ~1.000 GB
+        Books1/2 unknown
+      initialized/current weights
+      predict next token
+      compare with real data
+      minimize training loss
+      repeat
+    1.2 Flow
+      "This is an"
+      generate input embeddings
+      run model
+      "This is an example"
+    1.3 Embedding
+      "Every effort moves you"
+      "Every | effort | moves | you"
+      "6109 | 3626 | 6100 | 345"
+      token embeddings
+        "[[2.4][2.4][2.1]...]"
+        "[[-2.6][1.3][2.1]...]"
+      positional embeddings
+      input embeddings
+    1.4 Model
+      masked multi-head self attention
+      attention weights
+        "Your: 1.0000"
+        "journey: 0.5517 | 0.4483"
+        "starts: 0.3800 | 0.3097 | 0.3103"
+      LayerNorm
+      GELU
+      feed forward network
+      shortcut connections
+      logits
+      softmax
+      probabilities
+      "next ID 290: and"
+    2.0 Post-training
+      supervised fine-tuning
+      instruction tuning
+      preference alignment
+        RLHF
+        DPO
+      optimized weights
+```
+
+### variant 7: block layout
+
+```mermaid
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "12px", "fontFamily": "Arial"}}}%%
+block-beta
+    columns 5
+
+    data["1.1 Data<br/>Common Crawl<br/>WebText2<br/>Wikipedia<br/>The Pile<br/>Books1/2"]
+    pre["1.0 Pretraining<br/>initialized/current weights<br/>predict next token<br/>compare with real data<br/>minimize loss<br/>repeat"]
+    emb["1.3 Embedding<br/>Every effort moves you<br/>token IDs 6109 3626 6100 345<br/>token + positional embeddings"]
+    model["1.4 Model<br/>masked multi-head attention<br/>LayerNorm / FFN / GELU / shortcuts<br/>logits → softmax → probabilities<br/>next token: and"]
+    post["2.0 Post-training<br/>instruction examples<br/>SFT<br/>RLHF / DPO<br/>optimized weights"]
+
+    data --> pre
+    pre --> emb
+    emb --> model
+    model --> pre
+    pre --> post
+```
+
 <details>
 <summary>source files</summary>
 
