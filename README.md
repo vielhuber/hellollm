@@ -29,10 +29,10 @@ flowchart TD
     end
 
     subgraph FLOW["<b>FLOW</b>"]
-        F0["<b>Prompt</b><br/>&quot;This is an&quot;"]
+        F0["<b>Prompt</b><br/>&quot;Every effort moves you&quot;"]
         F1["<b>Generate input embeddings</b>"]
         F2["<b>Run model</b><br/>transformer / decoder"]
-        F3["<b>Generated text</b><br/>&quot;This is an example&quot;"]
+        F3["<b>Generated text</b><br/>&quot;Every effort moves you forward&quot;"]
     end
 
     subgraph EMB["<b>EMBEDDING</b>"]
@@ -46,15 +46,15 @@ flowchart TD
 
     subgraph MODEL["<b>MODEL</b>"]
         M0["<b>Input embeddings</b><br/>[[2.4][2.4][2.1]...]<br/>[[-2.6][1.3][2.1]...]<br/>[[2.0][1.8][-1.6]...]<br/>[[2.9][1.2][0.5]...]"]
-        M1["<b>Transformer block N×</b><br/>masked multi-head self attention<br/>causal: future tokens masked"]
-        M2["<b>Attention weights example</b><br/>Your: 1.0000<br/>journey: 0.5517 | 0.4483<br/>starts: 0.3800 | 0.3097 | 0.3103"]
-        M3["<b>Layer normalization</b><br/>GELU activation<br/>feed forward network<br/>shortcut connections"]
+        M1["<b>Transformer block N×</b><br/>layer normalization<br/>→ masked multi-head self attention<br/>causal: future tokens masked<br/>→ shortcut connection"]
+        M2["<b>Attention weights example</b><br/>Every: 1.0000<br/>effort: 0.5517 | 0.4483<br/>moves: 0.3800 | 0.3097 | 0.3103<br/>you: 0.2758 | 0.2460 | 0.2462 | 0.2320"]
+        M3["<b>Layer normalization</b><br/>→ feed forward network<br/>GELU activation<br/>→ shortcut connection"]
         M4["<b>Outputs</b><br/>[[2.4][2.4][2.1]...]<br/>[[-2.6][1.3][2.1]...]<br/>[[2.0][1.8][-1.6]...]<br/>[[2.9][1.2][0.5]...]"]
         M5["<b>Final layer normalization</b><br/>+ output projection<br/>linear → vocabulary size"]
         M6["<b>Logits</b><br/>[-0.4929, ..., 2.4812, ..., -0.6093]"]
         M7["<b>Softmax</b>"]
         M8["<b>Probabilities</b><br/>[0.0001, ..., 0.0200, ..., 0.0001]"]
-        M9["<b>Highest probability: 0.0200</b><br/>Next ID: 290<br/>Next token: &quot; and&quot;"]
+        M9["<b>Highest probability: 0.0200</b><br/>Next ID: 2651<br/>Next token: &quot; forward&quot;"]
     end
 
     subgraph POSTDATA["<b>DATA</b>"]
