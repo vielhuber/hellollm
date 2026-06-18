@@ -16,7 +16,7 @@ flowchart TD
         D2["WebText2<br/>https://openwebtext2.readthedocs.io<br/>~70 GB"]
         D3["Wikipedia<br/>https://www.wikipedia.org<br/>~100 GB"]
         D4["The Pile<br/>https://arxiv.org/abs/2101.00027<br/>~1.000 GB"]
-        D5["Books1/2<br/>unknown<br/>unknown"]
+        D5["Books1/2<br/>unknown size/source"]
     end
 
     subgraph PRE["<b>1.0 PRETRAINING</b>"]
@@ -76,8 +76,8 @@ flowchart TD
     D0 --> P1
     P0 --> P1
     P1 --> F0 --> F1 --> E0 --> E1 --> E2 --> E3 --> E4 --> E5
-    E5 --> F2 --> M0 --> M1 --> M2 --> M3 --> M4 --> M5 --> M6 --> M7 --> M8 --> P1A --> M9 --> F3
-    M9 --> P1B --> P2 --> P3 --> P1
+    E5 --> F2 --> M0 --> M1 --> M2 --> M3 --> M4 --> M5 --> M6 --> M7 --> M8 --> M9 --> F3
+    F3 --> P1A --> P1B --> P2 --> P3 --> P1
     P2 --> T0
     T0 --> T1 --> T4
     T0 --> T2 --> T4
