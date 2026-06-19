@@ -20,12 +20,12 @@ flowchart TD
     end
 
     subgraph PRE["<b>PRETRAINING</b>"]
-        P0["<b>Initialized/current weights</b>"]
+        P0["<b>Initialized / current weights</b><br/>the numbers inside the model<br/>start random, updated each step<br/>[[0.01][-0.02][0.00]...]<br/>[[-0.03][0.01][0.02]...]"]
         P1["<b>Run Flow</b>"]
         P1B["<b>Compare next token<br/>with real data</b>"]
         P2["<b>Optimize weights</b><br/>minimize training loss"]
         P3["<b>Repeat</b>"]
-        P4["<b>Final weights</b>"]
+        P4["<b>Final weights</b><br/>learned values after training<br/>[[0.84][-1.20][0.37]...]<br/>[[1.02][0.15][-0.66]...]"]
     end
 
     subgraph FLOW["<b>FLOW</b>"]
@@ -51,8 +51,8 @@ flowchart TD
         M3["<b>Layer normalization</b><br/>→ feed forward network<br/>GELU activation<br/>→ shortcut connection"]
         M4["<b>Outputs</b><br/>[[2.4][2.4][2.1]...]<br/>[[-2.6][1.3][2.1]...]<br/>[[2.0][1.8][-1.6]...]<br/>[[2.9][1.2][0.5]...]"]
         M5["<b>Final layer normalization</b><br/>+ output projection<br/>linear → vocabulary size"]
-        M6["<b>Logits</b><br/>[-0.4929, ..., 2.4812, ..., -0.6093]"]
-        M7["<b>Softmax</b>"]
+        M6["<b>Logits</b><br/>one raw score per vocabulary token<br/>(not yet a probability)<br/>[-0.4929, ..., 2.4812, ..., -0.6093]"]
+        M7["<b>Softmax</b><br/>turns logits into probabilities<br/>(each between 0 and 1, all sum to 1)"]
         M8["<b>Probabilities</b><br/>[0.0001, ..., 0.0200, ..., 0.0001]"]
         M9["<b>Highest probability:<br/>0.0200</b><br/>Next ID: 2651<br/>Next token:<br/>&quot; forward&quot;"]
     end
@@ -65,13 +65,13 @@ flowchart TD
     end
 
     subgraph POST["<b>POST-TRAINING</b>"]
-        T0["<b>Weights from pretraining</b>"]
+        T0["<b>Weights from pretraining</b><br/>[[0.84][-1.20][0.37]...]<br/>[[1.02][0.15][-0.66]...]"]
         T9["<b>Run post-training flow</b>"]
         T4["<b>Supervised fine-tuning</b><br/>instruction tuning"]
-        T5["<b>Preference<br/>alignment</b><br/>RLHF / DPO<br/>learn from better<br/>vs. worse"]
-        T6["<b>Final weights</b>"]
+        T5["<b>Preference alignment</b><br/>show the model two answers,<br/>it learns to prefer the better one<br/>RLHF / DPO"]
+        T6["<b>Final weights</b><br/>adjusted by post-training<br/>[[0.79][-1.15][0.41]...]<br/>[[0.98][0.22][-0.60]...]"]
         T7["<b>Repeat</b>"]
-        T10["<b>GGUF files</b><br/>convert weights into<br/>a compact file<br/>for local inference"]
+        T10["<b>GGUF files</b><br/>final weights packed into one file<br/>(often quantized → smaller)<br/>e.g. llama-7b-Q4_K_M.gguf<br/>for local inference"]
     end
 
     D1 --> D0
