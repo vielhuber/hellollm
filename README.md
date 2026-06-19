@@ -32,28 +32,28 @@ flowchart TD
         F0["<b>Prompt</b><br/>&quot;Every effort moves you&quot;"]
         F1["<b>Generate input embeddings</b>"]
         F2["<b>Run model</b><br/>transformer / decoder"]
-        F3["<b>Generated text</b><br/>&quot;Every effort<br/>moves you<br/>forward&quot;"]
+        F3["<b>Generated text</b><br/>&quot;Every effort moves you forward&quot;"]
     end
 
     subgraph EMB["<b>EMBEDDING</b>"]
         E0["<b>Input text</b><br/>&quot;Every effort moves you&quot;"]
         E1["<b>Tokenized text</b><br/>&quot;Every&quot; | &quot; effort&quot;<br/>&quot; moves&quot; | &quot; you&quot;"]
         E2["<b>Token IDs</b><br/>6109 | 3626 | 6100 | 345"]
-        E3["<b>Token embeddings</b><br/>[[2.4][2.4]<br/>[2.1]...]<br/>[[-2.6][1.3]<br/>[2.1]...]<br/>[[2.0][1.8]<br/>[-1.6]...]<br/>[[2.9][1.2]<br/>[0.5]...]"]
-        E4["<b>Positional embeddings</b>"]
-        E5["<b>Input embeddings</b><br/>token embeddings<br/>+ positional embeddings"]
+        E3["<b>Token embeddings</b><br/>[[2.4][2.4][2.1]...]<br/>[[-2.6][1.3][2.1]...]<br/>[[2.0][1.8][-1.6]...]<br/>[[2.9][1.2][0.5]...]"]
+        E4["<b>Positional embeddings</b><br/>[[0.1][0.0][0.2]...]<br/>[[0.2][0.1][0.1]...]<br/>[[0.3][0.2][0.0]...]<br/>[[0.4][0.3][0.1]...]"]
+        E5["<b>Input embeddings</b><br/>(token embeddings + positional embeddings)"]
     end
 
     subgraph MODEL["<b>MODEL</b>"]
-        M0["<b>Input embeddings</b><br/>[[2.4][2.4]<br/>[2.1]...]<br/>[[-2.6][1.3]<br/>[2.1]...]<br/>[[2.0][1.8]<br/>[-1.6]...]<br/>[[2.9][1.2]<br/>[0.5]...]"]
+        M0["<b>Input embeddings</b><br/>[[2.4][2.4][2.1]...]<br/>[[-2.6][1.3][2.1]...]<br/>[[2.0][1.8][-1.6]...]<br/>[[2.9][1.2][0.5]...]"]
         M1["<b>Transformer block N×</b><br/>layer normalization<br/>→ masked multi-head<br/>self attention<br/>causal: future tokens masked<br/>→ shortcut connection"]
-        M2["<b>Attention weights<br/>example</b><br/>Every: 1.0000<br/>effort: 0.5517<br/>| 0.4483<br/>moves: 0.3800<br/>| 0.3097 | 0.3103<br/>you: 0.2758 | 0.2460<br/>| 0.2462 | 0.2320"]
+        M2["<b>Attention weights example</b><br/>Every: 1.0000<br/>effort: 0.5517 | 0.4483<br/>moves: 0.3800 | 0.3097 | 0.3103<br/>you: 0.2758 | 0.2460 | 0.2462 | 0.2320"]
         M3["<b>Layer normalization</b><br/>→ feed forward network<br/>GELU activation<br/>→ shortcut connection"]
-        M4["<b>Outputs</b><br/>[[2.4][2.4]<br/>[2.1]...]<br/>[[-2.6][1.3]<br/>[2.1]...]<br/>[[2.0][1.8]<br/>[-1.6]...]<br/>[[2.9][1.2]<br/>[0.5]...]"]
+        M4["<b>Outputs</b><br/>[[2.4][2.4][2.1]...]<br/>[[-2.6][1.3][2.1]...]<br/>[[2.0][1.8][-1.6]...]<br/>[[2.9][1.2][0.5]...]"]
         M5["<b>Final layer normalization</b><br/>+ output projection<br/>linear → vocabulary size"]
-        M6["<b>Logits</b><br/>[-0.4929, ...<br/>2.4812, ...<br/>-0.6093]"]
+        M6["<b>Logits</b><br/>[-0.4929, ..., 2.4812, ..., -0.6093]"]
         M7["<b>Softmax</b>"]
-        M8["<b>Probabilities</b><br/>[0.0001, ...<br/>0.0200, ...<br/>0.0001]"]
+        M8["<b>Probabilities</b><br/>[0.0001, ..., 0.0200, ..., 0.0001]"]
         M9["<b>Highest probability:<br/>0.0200</b><br/>Next ID: 2651<br/>Next token:<br/>&quot; forward&quot;"]
     end
 
