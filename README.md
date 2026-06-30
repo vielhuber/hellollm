@@ -63,9 +63,11 @@ flowchart TD
 
     subgraph POST["<b>POST-TRAINING</b>"]
         T0["<b>Weights from pretraining</b><br/>[[0.84][-1.20][0.37]...]<br/>[[1.02][0.15][-0.66]...]"]
+        T13["<b>Current weights</b><br/>start from<br/>pretraining weights<br/>updated each step"]
         T9["<b>Run posttraining flow</b>"]
         T4["<b>Supervised fine-tuning</b><br/>instruction tuning"]
         T5["<b>Preference alignment</b><br/>show two answers<br/>prefer the better one<br/>RLHF / DPO"]
+        T14["<b>Optimize weights</b><br/>update after<br/>this example / step"]
         T12["<b>More posttraining?</b><br/>more examples / steps<br/>or training budget reached"]
         T6["<b>Final weights</b><br/>adjusted by<br/>post-training<br/>[[0.79][-1.15][0.41]...]<br/>[[0.98][0.22][-0.60]...]"]
     end
@@ -89,11 +91,11 @@ flowchart TD
     T1 --> T8
     T2 --> T8
     T3 --> T8
-    T0 --> T9
+    T0 --> T13
     T8 --> T9
-    T9 --> T4
-    T4 --> T5 --> T12
-    T12 -->|more examples / steps| T9
+    T13 --> T9 --> T4
+    T4 --> T5 --> T14 --> T12
+    T12 -->|more examples / steps| T13
     T12 -->|training budget reached| T6 --> T11 --> T10
 
     classDef data fill:#261a3d,stroke:#a371f7,stroke-width:1px,color:#f0f6fc;
@@ -107,7 +109,7 @@ flowchart TD
     class E0,E1,E2,E3,E4,E5 embed;
     class M0,M1,M2,M3,M4,M5,M6,M7,M8,M9 model;
     class T1,T2,T3,T8 data;
-    class T0,T4,T5,T6,T9,T12 post;
+    class T0,T4,T5,T6,T9,T12,T13,T14 post;
     class T10,T11 gguf;
 
     click D1 "https://commoncrawl.org" "Open Common Crawl"
