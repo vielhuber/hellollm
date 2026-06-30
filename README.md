@@ -86,7 +86,7 @@ flowchart TD
     P0 --> P5 --> F0 --> F1 --> E0 --> E1 --> E2 --> E3 --> E4 --> E5
     E5 --> F2 --> M0 --> M1 --> M2 --> M3 --> M4 --> M5 --> M6 --> M7 --> M8 --> M9 --> F3
     F3 --> P1B --> P2 --> P3
-    P3 -->|more batches / steps| P0
+    P3 -.->|more batches / steps| P0
     P3 -->|training budget reached| P4 --> T0
     T1 --> T8
     T2 --> T8
@@ -95,7 +95,7 @@ flowchart TD
     T8 --> T9
     T13 --> T9 --> T4
     T4 --> T5 --> T14 --> T12
-    T12 -->|more examples / steps| T13
+    T12 -.->|more examples / steps| T13
     T12 -->|training budget reached| T6 --> T11 --> T10
 
     classDef data fill:#261a3d,stroke:#a371f7,stroke-width:1px,color:#f0f6fc;
