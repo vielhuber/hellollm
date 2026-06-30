@@ -3,7 +3,7 @@
 
 # 🫙 hellollm 🫙
 
-hellollm is a compact learning map for understanding large language models from the ground up. it keeps the whole process in one github-rendered mermaid architecture diagram: raw text becomes a training set, weights are trained through next-token prediction, text is transformed into embeddings, the transformer produces probabilities, post-training adapts the model to useful answers, and the final weights can be converted into gguf files for local inference.
+hellollm shows how large language models are trained and packaged.
 
 ## architecture
 
@@ -19,13 +19,13 @@ flowchart TD
         D5["<b>Books1/2</b><br/>unknown size/source"]
     end
 
-    subgraph PRE["<b>PRETRAINING</b>"]
+    subgraph PRE["<b>PRE-TRAINING</b>"]
         P0["<b>Initialized / current<br/>weights</b><br/>model numbers<br/>start random<br/>updated each step<br/>[[0.01][-0.02][0.00]...]<br/>[[-0.03][0.01][0.02]...]"]
         P1["<b>Run pretraining flow</b>"]
         P5["<b>Batch / training step</b><br/>small part of<br/>the training set"]
         P1B["<b>Compare next token<br/>with real data</b>"]
         P2["<b>Optimize weights</b><br/>update after<br/>this batch"]
-        P3{"<b>More training?</b><br/>more batches / steps<br/>or training budget reached"}
+        P3["<b>More training?</b><br/>more batches / steps<br/>or training budget reached"]
         P4["<b>Final weights</b><br/>learned values<br/>after training<br/>[[0.84][-1.20][0.37]...]<br/>[[1.02][0.15][-0.66]...]"]
         F0["<b>Prompt</b><br/>&quot;Every effort<br/>moves you&quot;"]
         F1["<b>Generate input embeddings</b>"]
@@ -67,8 +67,8 @@ flowchart TD
         T9["<b>Run posttraining flow</b>"]
         T4["<b>Supervised fine-tuning</b><br/>instruction tuning"]
         T5["<b>Preference alignment</b><br/>show two answers<br/>prefer the better one<br/>RLHF / DPO"]
+        T12["<b>More posttraining?</b><br/>more examples / steps<br/>or training budget reached"]
         T6["<b>Final weights</b><br/>adjusted by<br/>post-training<br/>[[0.79][-1.15][0.41]...]<br/>[[0.98][0.22][-0.60]...]"]
-        T7["<b>Repeat</b>"]
     end
 
     subgraph GGUF["<b>GGUF</b>"]
@@ -94,9 +94,9 @@ flowchart TD
     T0 --> T9
     T8 --> T9
     T9 --> T4
-    T4 --> T5 --> T7
-    T7 --> T9
-    T7 --> T6 --> T11 --> T10
+    T4 --> T5 --> T12
+    T12 -->|more examples / steps| T9
+    T12 -->|training budget reached| T6 --> T11 --> T10
 
     classDef data fill:#261a3d,stroke:#a371f7,stroke-width:1px,color:#f0f6fc;
     classDef train fill:#3b2e00,stroke:#d29922,stroke-width:1px,color:#f0f6fc;
@@ -109,7 +109,7 @@ flowchart TD
     class E0,E1,E2,E3,E4,E5 embed;
     class M0,M1,M2,M3,M4,M5,M6,M7,M8,M9 model;
     class T1,T2,T3,T8 data;
-    class T0,T4,T5,T6,T7,T9 post;
+    class T0,T4,T5,T6,T9,T12 post;
     class T10,T11 gguf;
 
     click D1 "https://commoncrawl.org" "Open Common Crawl"
