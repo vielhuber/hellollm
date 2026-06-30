@@ -25,7 +25,7 @@ flowchart TD
         P5["<b>Batch / training step</b><br/>small part of<br/>the training set"]
         P1B["<b>Compare next token<br/>with real data</b>"]
         P2["<b>Optimize weights</b><br/>update after<br/>this batch"]
-        P3["<b>Repeat</b><br/>next batch<br/>next step"]
+        P3{"<b>More training?</b><br/>more batches / steps<br/>or training budget reached"}
         P4["<b>Final weights</b><br/>learned values<br/>after training<br/>[[0.84][-1.20][0.37]...]<br/>[[1.02][0.15][-0.66]...]"]
         F0["<b>Prompt</b><br/>&quot;Every effort<br/>moves you&quot;"]
         F1["<b>Generate input embeddings</b>"]
@@ -81,12 +81,13 @@ flowchart TD
     D3 --> D0
     D4 --> D0
     D5 --> D0
-    D0 --> P5 --> F0
     P0 --> P1
-    P1 --> F0 --> F1 --> E0 --> E1 --> E2 --> E3 --> E4 --> E5
+    D0 --> P5
+    P1 --> P5 --> F0 --> F1 --> E0 --> E1 --> E2 --> E3 --> E4 --> E5
     E5 --> F2 --> M0 --> M1 --> M2 --> M3 --> M4 --> M5 --> M6 --> M7 --> M8 --> M9 --> F3
-    F3 --> P1B --> P2 --> P3 --> P0
-    P3 --> P4 --> T0
+    F3 --> P1B --> P2 --> P3
+    P3 -->|more batches / steps| P0
+    P3 -->|training budget reached| P4 --> T0
     T1 --> T8
     T2 --> T8
     T3 --> T8
