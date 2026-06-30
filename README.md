@@ -27,9 +27,6 @@ flowchart TD
         P2["<b>Optimize weights</b><br/>update after<br/>this batch"]
         P3["<b>Repeat</b><br/>next batch<br/>next step"]
         P4["<b>Final weights</b><br/>learned values<br/>after training<br/>[[0.84][-1.20][0.37]...]<br/>[[1.02][0.15][-0.66]...]"]
-    end
-
-    subgraph FLOW["<b>FLOW</b>"]
         F0["<b>Prompt</b><br/>&quot;Every effort<br/>moves you&quot;"]
         F1["<b>Generate input embeddings</b>"]
         F2["<b>Run model</b><br/>transformer / decoder"]
