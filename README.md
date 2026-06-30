@@ -74,7 +74,7 @@ flowchart TD
     end
 
     subgraph GGUF["<b>GGUF</b>"]
-        T10["<b>GGUF files</b><br/>final weights<br/>packed into one file<br/>often quantized<br/>→ smaller<br/>e.g. llama-7b-Q4_K_M.gguf<br/>for local inference"]
+        T10["<b>GGUF files</b><br/>final weights<br/>packed into one file<br/>quantization<br/>reduces precision<br/>→ smaller<br/>e.g. llama-7b-Q4_K_M.gguf<br/>for local inference"]
     end
 
     D1 --> D0
@@ -82,7 +82,7 @@ flowchart TD
     D3 --> D0
     D4 --> D0
     D5 --> D0
-    D0 --> P0
+    D0 --> F0
     P0 --> P1
     P1 --> F0 --> F1 --> E0 --> E1 --> E2 --> E3 --> E4 --> E5
     E5 --> F2 --> M0 --> M1 --> M2 --> M3 --> M4 --> M5 --> M6 --> M7 --> M8 --> M9 --> F3
