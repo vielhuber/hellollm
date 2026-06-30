@@ -22,9 +22,10 @@ flowchart TD
     subgraph PRE["<b>PRETRAINING</b>"]
         P0["<b>Initialized / current<br/>weights</b><br/>model numbers<br/>start random<br/>updated each step<br/>[[0.01][-0.02][0.00]...]<br/>[[-0.03][0.01][0.02]...]"]
         P1["<b>Run pretraining flow</b>"]
+        P5["<b>Batch / training step</b><br/>small part of<br/>the training set"]
         P1B["<b>Compare next token<br/>with real data</b>"]
-        P2["<b>Optimize weights</b><br/>minimize training loss"]
-        P3["<b>Repeat</b>"]
+        P2["<b>Optimize weights</b><br/>update after<br/>this batch"]
+        P3["<b>Repeat</b><br/>next batch<br/>next step"]
         P4["<b>Final weights</b><br/>learned values<br/>after training<br/>[[0.84][-1.20][0.37]...]<br/>[[1.02][0.15][-0.66]...]"]
     end
 
@@ -74,7 +75,8 @@ flowchart TD
     end
 
     subgraph GGUF["<b>GGUF</b>"]
-        T10["<b>GGUF files</b><br/>final weights<br/>packed into one file<br/>quantization<br/>reduces precision<br/>→ smaller<br/>e.g. llama-7b-Q4_K_M.gguf<br/>for local inference"]
+        T11["<b>Quantization</b><br/>reduce precision<br/>for smaller files<br/>e.g. 16-bit → 4-bit"]
+        T10["<b>GGUF files</b><br/>quantized weights<br/>packed into one file<br/>e.g. llama-7b-Q4_K_M.gguf<br/>for local inference"]
     end
 
     D1 --> D0
@@ -82,7 +84,7 @@ flowchart TD
     D3 --> D0
     D4 --> D0
     D5 --> D0
-    D0 --> F0
+    D0 --> P5 --> F0
     P0 --> P1
     P1 --> F0 --> F1 --> E0 --> E1 --> E2 --> E3 --> E4 --> E5
     E5 --> F2 --> M0 --> M1 --> M2 --> M3 --> M4 --> M5 --> M6 --> M7 --> M8 --> M9 --> F3
@@ -96,7 +98,7 @@ flowchart TD
     T9 --> T4
     T4 --> T5 --> T7
     T7 --> T9
-    T7 --> T6 --> T10
+    T7 --> T6 --> T11 --> T10
 
     classDef data fill:#261a3d,stroke:#a371f7,stroke-width:1px,color:#f0f6fc;
     classDef train fill:#3b2e00,stroke:#d29922,stroke-width:1px,color:#f0f6fc;
@@ -105,12 +107,12 @@ flowchart TD
     classDef post fill:#4a1016,stroke:#f85149,stroke-width:1px,color:#f0f6fc;
     classDef gguf fill:#13233a,stroke:#79c0ff,stroke-width:1px,color:#f0f6fc;
     class D0,D1,D2,D3,D4,D5 data;
-    class P0,P1,P1B,P2,P3,P4,F0,F1,F2,F3 train;
+    class P0,P1,P1B,P2,P3,P4,P5,F0,F1,F2,F3 train;
     class E0,E1,E2,E3,E4,E5 embed;
     class M0,M1,M2,M3,M4,M5,M6,M7,M8,M9 model;
     class T1,T2,T3,T8 data;
     class T0,T4,T5,T6,T7,T9 post;
-    class T10 gguf;
+    class T10,T11 gguf;
 
     click D1 "https://commoncrawl.org" "Open Common Crawl"
     click D2 "https://openwebtext2.readthedocs.io" "Open WebText2"
