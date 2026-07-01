@@ -10,26 +10,22 @@ hellollm shows how large language models are trained and packaged.
 ```mermaid
 %%{init: {"theme": "base", "themeVariables": {"fontSize": "12px", "fontFamily": "Courier New", "primaryColor": "#161b22", "primaryTextColor": "#f0f6fc", "primaryBorderColor": "#30363d", "secondaryColor": "#161b22", "secondaryTextColor": "#f0f6fc", "secondaryBorderColor": "#30363d", "tertiaryColor": "#161b22", "tertiaryTextColor": "#f0f6fc", "tertiaryBorderColor": "#30363d", "clusterBkg": "#0d1117", "clusterBorder": "#30363d", "titleColor": "#c9d1d9", "lineColor": "#8b949e", "edgeLabelBackground": "#0d1117"}, "flowchart": {"htmlLabels": true, "nodeSpacing": 30, "rankSpacing": 44, "curve": "basis"}}}%%
 flowchart TD
-    subgraph DATA["<b>DATA</b>"]
+    subgraph DATA["<b>TRAINING DATA</b>"]
         D0["<b>Training set</b>"]
         D1["<b>Common Crawl</b><br/>https://commoncrawl.org<br/>~100.000 GB"]
         D2["<b>WebText2</b><br/>https://openwebtext2.readthedocs.io<br/>~70 GB"]
         D3["<b>Wikipedia</b><br/>https://www.wikipedia.org<br/>~100 GB"]
         D4["<b>The Pile</b><br/>https://arxiv.org/abs/2101.00027<br/>~1.000 GB"]
-        D5["<b>Books1/2</b><br/>unknown size/source"]
+        D5["<b>Books1/2</b><br/>unknown size<br/>unknown source"]
     end
 
     subgraph PRE["<b>PRE-TRAINING</b>"]
-        P0["<b>Initialized / current<br/>weights</b><br/>model numbers<br/>start random<br/>updated each step<br/>[[0.01][-0.02][0.00]...]<br/>[[-0.03][0.01][0.02]...]"]
-        P6["<b>Flow</b>"]
+        P0["<b>Updated weights</b><br/>model numbers<br/>updated each step<br/>[[0.01][-0.02][0.00]...]<br/>[[-0.03][0.01][0.02]...]"]
+        W0["<b>Initial weights</b><br/>model numbers<br/>start random<br/>before training<br/>[[0.01][-0.02][0.00]...]<br/>[[-0.03][0.01][0.02]...]"]
         P5["<b>Batch / training step</b><br/>small part of<br/>the training set"]
-        P1B["<b>Compare next token<br/>with real data</b>"]
-        P2["<b>Optimize weights</b><br/>update after<br/>this batch"]
         P3["<b>More training?</b><br/>more batches / steps<br/>or training budget reached"]
         P4["<b>Final weights</b><br/>learned values<br/>after training<br/>[[0.84][-1.20][0.37]...]<br/>[[1.02][0.15][-0.66]...]"]
         F0["<b>Prompt</b><br/>&quot;Every effort<br/>moves you&quot;"]
-        F1["<b>Generate input embeddings</b>"]
-        F2["<b>Run model</b><br/>transformer / decoder"]
         F3["<b>Generated text</b><br/>&quot;Every effort<br/>moves you forward&quot;"]
     end
 
@@ -46,16 +42,13 @@ flowchart TD
         M0["<b>Input embeddings</b><br/>[[2.4][2.4][2.1]...]<br/>[[-2.6][1.3][2.1]...]<br/>[[2.0][1.8][-1.6]...]<br/>[[2.9][1.2][0.5]...]"]
         M1["<b>Transformer block N×</b><br/>layer normalization<br/>→ masked multi-head<br/>self attention<br/>causal masking<br/>future tokens hidden<br/>→ shortcut connection"]
         M2["<b>Attention weights example</b><br/>Every: 1.0000<br/>effort: 0.5517 | 0.4483<br/>moves: 0.3800 | 0.3097<br/>| 0.3103<br/>you: 0.2758 | 0.2460<br/>| 0.2462 | 0.2320"]
-        M3["<b>Layer normalization</b><br/>→ feed forward network<br/>GELU activation<br/>→ shortcut connection"]
         M4["<b>Outputs</b><br/>[[2.4][2.4][2.1]...]<br/>[[-2.6][1.3][2.1]...]<br/>[[2.0][1.8][-1.6]...]<br/>[[2.9][1.2][0.5]...]"]
-        M5["<b>Final layer normalization</b><br/>+ output projection<br/>linear → vocabulary size"]
         M6["<b>Logits</b><br/>raw score per token<br/>not yet probability<br/>[-0.4929, ..., 2.4812,<br/>..., -0.6093]"]
-        M7["<b>Softmax</b><br/>turns logits<br/>into probabilities<br/>values sum to 1"]
         M8["<b>Probabilities</b><br/>[0.0001, ..., 0.0200,<br/>..., 0.0001]"]
         M9["<b>Highest probability:<br/>0.0200</b><br/>Next ID: 2651<br/>Next token:<br/>&quot; forward&quot;"]
     end
 
-    subgraph POSTDATA["<b>DATA</b>"]
+    subgraph POSTDATA["<b>TRAINING DATA</b>"]
         T8["<b>Training set</b>"]
         T1["<b>Example #1</b><br/>Q: Convert 45 kilometers<br/>to meters.<br/>A: 45 kilometers is<br/>45,000 meters."]
         T2["<b>Example #2</b><br/>Q: Provide a synonym<br/>for bright.<br/>A: A synonym for bright<br/>is radiant."]
@@ -65,40 +58,51 @@ flowchart TD
     subgraph POST["<b>POST-TRAINING</b>"]
         T0["<b>Weights from pretraining</b><br/>[[0.84][-1.20][0.37]...]<br/>[[1.02][0.15][-0.66]...]"]
         T13["<b>Current weights</b><br/>start from<br/>pretraining weights<br/>updated each step"]
-        T9["<b>Run posttraining flow</b>"]
-        T4["<b>Supervised fine-tuning</b><br/>instruction tuning"]
-        T5["<b>Preference alignment</b><br/>show two answers<br/>prefer the better one<br/>RLHF / DPO"]
-        T14["<b>Optimize weights</b><br/>update after<br/>this example / step"]
         T12["<b>More posttraining?</b><br/>more examples / steps<br/>or training budget reached"]
         T6["<b>Final weights</b><br/>adjusted by<br/>post-training<br/>[[0.79][-1.15][0.41]...]<br/>[[0.98][0.22][-0.60]...]"]
     end
 
     subgraph GGUF["<b>GGUF</b>"]
-        T11["<b>Quantization</b><br/>reduce precision<br/>for smaller files<br/>e.g. 16-bit → 4-bit"]
         T10["<b>GGUF files</b><br/>quantized weights<br/>packed into one file<br/>e.g. llama-7b-Q4_K_M.gguf<br/>for local inference"]
     end
 
-    D1 --> D0
-    D2 --> D0
-    D3 --> D0
-    D4 --> D0
-    D5 --> D0
-    D0 --> P5
-    P0 --> P6
-    P6 --> P5 --> F0 --> F1 --> E0 --> E1 --> E2 --> E3 --> E4 --> E5
-    E5 --> F2 --> M0 --> M1 --> M2 --> M3 --> M4 --> M5 --> M6 --> M7 --> M8 --> M9 --> F3
-    F3 --> P1B --> P2 --> P3
+    D1 -->|collect| D0
+    D2 -->|collect| D0
+    D3 -->|collect| D0
+    D4 -->|collect| D0
+    D5 -->|collect| D0
+    D0 -->|sample batch| P5
+    P0 -->|next step weights| P5
+    W0 -->|first step weights| P5
+    P5 -->|choose text| F0
+    F0 -->|generate input<br/>embeddings| E0
+    E0 -->|tokenize| E1
+    E1 -->|map to ids| E2
+    E2 -->|look up token vectors| E3
+    E2 -->|look up position vectors| E4
+    E3 -->|add| E5
+    E4 -->|add| E5
+    E5 -->|run model| M0
+    M0 -->|enter block| M1
+    M1 -->|calculate attention| M2
+    M2 -->|layer normalization<br/>+ feed forward| M4
+    M4 -->|final layer normalization<br/>+ output projection| M6
+    M6 -->|softmax| M8
+    M8 -->|predict token| M9
+    M9 -->|append token| F3
+    F3 -->|compare + optimize| P3
     P3 -->|more batches / steps| P0
-    P3 -->|training budget reached| P4 --> T0
-    T1 --> T8
-    T2 --> T8
-    T3 --> T8
-    T0 --> T13
-    T8 --> T9
-    T13 --> T9 --> T4
-    T4 --> T5 --> T14 --> T12
-    T12 -->|more examples / steps| T13
-    T12 -->|training budget reached| T6 --> T11 --> T10
+    P3 -->|training budget reached| P4
+    P4 -->|reuse for post-training| T0
+    T1 -->|collect| T8
+    T2 -->|collect| T8
+    T3 -->|collect| T8
+    T0 -->|initialize| T13
+    T13 -->|use weights| T12
+    T8 -->|train + align| T12
+    T12 -->|more steps + optimize| T13
+    T12 -->|training budget reached| T6
+    T6 -->|quantization| T10
 
     classDef data fill:#261a3d,stroke:#a371f7,stroke-width:1px,color:#f0f6fc;
     classDef train fill:#3b2e00,stroke:#d29922,stroke-width:1px,color:#f0f6fc;
@@ -106,13 +110,15 @@ flowchart TD
     classDef model fill:#0f3a20,stroke:#3fb950,stroke-width:1px,color:#f0f6fc;
     classDef post fill:#4a1016,stroke:#f85149,stroke-width:1px,color:#f0f6fc;
     classDef gguf fill:#13233a,stroke:#79c0ff,stroke-width:1px,color:#f0f6fc;
+    classDef weights fill:#3b2e00,stroke:#d29922,stroke-width:1px,color:#f0f6fc;
     class D0,D1,D2,D3,D4,D5 data;
-    class P0,P1B,P2,P3,P4,P5,P6,F0,F1,F2,F3 train;
+    class P0,P3,P4,P5,F0,F3 train;
     class E0,E1,E2,E3,E4,E5 embed;
-    class M0,M1,M2,M3,M4,M5,M6,M7,M8,M9 model;
+    class M0,M1,M2,M4,M6,M8,M9 model;
     class T1,T2,T3,T8 data;
-    class T0,T4,T5,T6,T9,T12,T13,T14 post;
-    class T10,T11 gguf;
+    class T0,T6,T12,T13 post;
+    class T10 gguf;
+    class W0 weights;
 
     click D1 "https://commoncrawl.org" "Open Common Crawl"
     click D2 "https://openwebtext2.readthedocs.io" "Open WebText2"
