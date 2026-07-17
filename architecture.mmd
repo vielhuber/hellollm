@@ -13,10 +13,7 @@ flowchart TD
         P0["<b>Updated weights</b><br/>model numbers<br/>updated each step<br/>[[0.01][-0.02][0.00]...]<br/>[[-0.03][0.01][0.02]...]"]
         W0["<b>Initial weights</b><br/>model numbers<br/>start random<br/>before training<br/>[[0.01][-0.02][0.00]...]<br/>[[-0.03][0.01][0.02]...]"]
         P5["<b>Batch / training step</b><br/>small part of<br/>the training set"]
-        P3["<b>More training?</b><br/>more batches / steps<br/>or training budget reached"]
-        P4["<b>Final weights</b><br/>learned values<br/>after training<br/>[[0.84][-1.20][0.37]...]<br/>[[1.02][0.15][-0.66]...]"]
         F0["<b>Prompt</b><br/>&quot;Every effort<br/>moves you&quot;"]
-        F3["<b>Generated text</b><br/>&quot;Every effort<br/>moves you forward&quot;"]
     end
 
     subgraph EMB["<b>EMBEDDING</b>"]
@@ -36,6 +33,12 @@ flowchart TD
         M6["<b>Logits</b><br/>raw score per token<br/>not yet probability<br/>[-0.4929, ..., 2.4812,<br/>..., -0.6093]"]
         M8["<b>Probabilities</b><br/>[0.0001, ..., 0.0200,<br/>..., 0.0001]"]
         M9["<b>Highest probability:<br/>0.0200</b><br/>Next ID: 2651<br/>Next token:<br/>&quot; forward&quot;"]
+    end
+
+    subgraph UPDATE["<b>LOSS & WEIGHT UPDATE</b>"]
+        F3["<b>Generated text</b><br/>&quot;Every effort<br/>moves you forward&quot;"]
+        P3["<b>More training?</b><br/>more batches / steps<br/>or training budget reached"]
+        P4["<b>Final weights</b><br/>learned values<br/>after training<br/>[[0.84][-1.20][0.37]...]<br/>[[1.02][0.15][-0.66]...]"]
     end
 
     subgraph POSTDATA["<b>TRAINING DATA</b>"]
