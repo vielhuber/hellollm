@@ -10,7 +10,6 @@ flowchart TD
     end
 
     subgraph PRE["<b>PRE-TRAINING</b>"]
-        P0["<b>Updated weights</b><br/>model numbers<br/>updated each step<br/>[[0.01][-0.02][0.00]...]<br/>[[-0.03][0.01][0.02]...]"]
         W0["<b>Initial weights</b><br/>model numbers<br/>start random<br/>before training<br/>[[0.01][-0.02][0.00]...]<br/>[[-0.03][0.01][0.02]...]"]
         P5["<b>Batch / training step</b><br/>small part of<br/>the training set"]
         F0["<b>Prompt</b><br/>&quot;Every effort<br/>moves you&quot;"]
@@ -36,6 +35,7 @@ flowchart TD
     end
 
     subgraph UPDATE["<b>LOSS & WEIGHT UPDATE</b>"]
+        P0["<b>Updated weights</b><br/>model numbers<br/>updated each step<br/>[[0.01][-0.02][0.00]...]<br/>[[-0.03][0.01][0.02]...]"]
         F3["<b>Generated text</b><br/>&quot;Every effort<br/>moves you forward&quot;"]
         P3["<b>More training?</b><br/>more batches / steps<br/>or training budget reached"]
         P4["<b>Final weights</b><br/>learned values<br/>after training<br/>[[0.84][-1.20][0.37]...]<br/>[[1.02][0.15][-0.66]...]"]
