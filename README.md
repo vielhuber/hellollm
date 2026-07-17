@@ -40,8 +40,8 @@ flowchart TD
 
     subgraph MODEL["<b>MODEL</b>"]
         M0["<b>Input embeddings</b><br/>[[2.4][2.4][2.1]...]<br/>[[-2.6][1.3][2.1]...]<br/>[[2.0][1.8][-1.6]...]<br/>[[2.9][1.2][0.5]...]"]
-        M1["<b>Transformer block N×</b><br/>layer normalization<br/>→ masked multi-head<br/>self attention<br/>causal masking<br/>future tokens hidden<br/>→ shortcut connection"]
-        M2["<b>Attention weights example</b><br/>Every: 1.0000<br/>effort: 0.5517 | 0.4483<br/>moves: 0.3800 | 0.3097<br/>| 0.3103<br/>you: 0.2758 | 0.2460<br/>| 0.2462 | 0.2320"]
+        M1["<b>Transformer block N×</b><br/>layer normalization<br/>→ masked multi-head<br/>self-attention<br/>causal mask hides<br/>future tokens<br/>→ shortcut connection"]
+        M2["<b>One attention head</b><br/>example relation scores<br/>Every: 1.0000<br/>effort: 0.5517 | 0.4483<br/>moves: 0.3800 | 0.3097<br/>| 0.3103<br/>you: 0.2758 | 0.2460<br/>| 0.2462 | 0.2320"]
         M4["<b>Outputs</b><br/>[[2.4][2.4][2.1]...]<br/>[[-2.6][1.3][2.1]...]<br/>[[2.0][1.8][-1.6]...]<br/>[[2.9][1.2][0.5]...]"]
         M6["<b>Logits</b><br/>raw score per token<br/>not yet probability<br/>[-0.4929, ..., 2.4812,<br/>..., -0.6093]"]
         M8["<b>Probabilities</b><br/>[0.0001, ..., 0.0200,<br/>..., 0.0001]"]
@@ -64,6 +64,39 @@ flowchart TD
 
     subgraph GGUF["<b>GGUF</b>"]
         T10["<b>GGUF files</b><br/>quantized weights<br/>packed into one file<br/>e.g. llama-7b-Q4_K_M.gguf<br/>for local inference"]
+    end
+
+    subgraph TOKENS["<b>TOKENS & CONTEXT</b>"]
+        C0["<b>Token</b><br/>a whole common word,<br/>a word part, a space,<br/>punctuation or<br/>one special character"]
+        C1["<b>Rough token counts</b><br/>1,000 English words:<br/>about 1,300 tokens<br/>1,000 German words:<br/>about 1,500–2,000 tokens<br/>100 book pages:<br/>about 60,000–90,000 tokens"]
+        C2["<b>Vocabulary</b><br/>the list of tokens<br/>known by the model<br/>can contain about<br/>200,000 tokens"]
+        C3["<b>Context window</b><br/>all tokens visible now:<br/>system prompt, chat,<br/>model answers and<br/>retrieved documents<br/>early models: 512 tokens<br/>new models: up to millions"]
+        C4["<b>Text generation</b><br/>one new token per step<br/>the new token becomes<br/>part of the next input<br/>repeat until finished"]
+        C5["<b>KV cache</b><br/>keeps earlier attention<br/>keys and values in RAM<br/>avoids recalculating them<br/>but grows with context"]
+    end
+
+    subgraph COST["<b>ATTENTION & COST</b>"]
+        A0["<b>Self-attention</b><br/>each token checks every<br/>allowed earlier token<br/>relation scores store<br/>context and meaning"]
+        A1["<b>Attention heads</b><br/>many views in parallel<br/>heads can learn patterns:<br/>word order, punctuation,<br/>subject + verb,<br/>adjective + noun,<br/>different meanings of bank"]
+        A2["<b>Quadratic work</b><br/>n tokens create about<br/>n² token relations<br/>10 → 100<br/>1,000 → 1 million<br/>10,000 → 100 million<br/>500,000 → 250 billion"]
+        A3["<b>Training cost</b><br/>matrix work for tokens<br/>and batches runs in parallel<br/>on many GPUs<br/>needs much hardware,<br/>electricity and cooling water"]
+        A4["<b>Inference cost</b><br/>long context needs<br/>more computation,<br/>RAM, time and money<br/>token use is often billed"]
+        A5["<b>Optimizations</b><br/>KV caching, compression<br/>and optimized attention<br/>reduce some work to O(n)<br/>but can move the limit<br/>to RAM or answer quality"]
+    end
+
+    subgraph ALT["<b>EFFICIENT ALTERNATIVES</b>"]
+        L0["<b>LSTM</b><br/>recurrent network from<br/>Hochreiter + Schmidhuber<br/>reads tokens in order<br/>cell state is a notebook<br/>forget gates remove old data<br/>learns missing / next tokens<br/>good for short tasks<br/>but may lose details"]
+        L1["<b>LSTM limit</b><br/>each token depends on<br/>the previous token<br/>sequence work is hard<br/>to run in parallel<br/>large training sets<br/>therefore scale poorly"]
+        L2["<b>xLSTM</b><br/>modern recurrent network<br/>fixed-size matrix memory<br/>stores key-value relations<br/>writes with an outer product<br/>forgets irrelevant relations<br/>keeps useful ones readable<br/>remembers token order<br/>linear O(n) work"]
+        L3["<b>xLSTM training</b><br/>Hochreiter's team / NXAI<br/>modernized memory + gates<br/>matrix work enables<br/>parallel training<br/>models grew from 1.2B<br/>to 7B parameters<br/>the 7B model learned from<br/>2.3 trillion tokens"]
+        L4["<b>Kimi Linear</b><br/>Moonshot AI hybrid model<br/>Kimi Delta Attention uses<br/>small recurrent memory<br/>in 3 of 4 attention blocks<br/>Mixture of Experts<br/>linear O(n) work<br/>48B total parameters<br/>3B active per token"]
+        L5["<b>Current trade-off</b><br/>Transformers are mature<br/>with optimized hardware,<br/>software and training<br/>xLSTM and Kimi need less<br/>work for long sequences<br/>but have not replaced<br/>large consumer models"]
+    end
+
+    subgraph USE["<b>REAL-WORLD USE</b>"]
+        U0["<b>Local industry</b><br/>efficient local models fit<br/>existing hardware<br/>can be adapted per robot<br/>useful when cloud GPUs<br/>are too costly"]
+        U1["<b>Industrial examples</b><br/>robotics and logistics<br/>pumps and injection molding<br/>recycling and controls<br/>Bosch Rexroth and Festo"]
+        U2["<b>TiRex</b><br/>xLSTM model for<br/>machine time series<br/>predicts without training<br/>on the user's own data<br/>runs on small controllers<br/>or a Raspberry Pi"]
     end
 
     D1 -->|collect| D0
@@ -103,6 +136,31 @@ flowchart TD
     T12 -->|more steps + optimize| T13
     T12 -->|training budget reached| T6
     T6 -->|quantization| T10
+    E1 -.->|forms| C0
+    C0 -->|count| C1
+    C0 -->|look up in| C2
+    C1 -->|fills| C3
+    C2 -->|defines possible tokens| C3
+    C3 -->|feed one step| C4
+    F3 -.->|shows one step of| C4
+    C4 -->|reuse past states| C5
+    M1 -.->|uses| A0
+    A0 -->|split patterns across| A1
+    A0 -->|create relations| A2
+    A2 -->|during learning| A3
+    A2 -->|during use| A4
+    C5 -->|reduce repeated work| A5
+    A4 -->|reduce cost with| A5
+    A2 -.->|motivate| L0
+    L0 -->|limited by| L1
+    L1 -->|modernize as| L2
+    L2 -->|scale with| L3
+    L2 -->|inspire memory in| L4
+    L3 -->|compare with| L5
+    L4 -->|compare with| L5
+    L2 -->|run locally in| U0
+    U0 -->|apply to| U1
+    L2 -->|specialize as| U2
 
     classDef data fill:#261a3d,stroke:#a371f7,stroke-width:1px,color:#f0f6fc;
     classDef train fill:#3b2e00,stroke:#d29922,stroke-width:1px,color:#f0f6fc;
@@ -111,6 +169,10 @@ flowchart TD
     classDef post fill:#4a1016,stroke:#f85149,stroke-width:1px,color:#f0f6fc;
     classDef gguf fill:#13233a,stroke:#79c0ff,stroke-width:1px,color:#f0f6fc;
     classDef weights fill:#3b2e00,stroke:#d29922,stroke-width:1px,color:#f0f6fc;
+    classDef context fill:#24304a,stroke:#8cafff,stroke-width:1px,color:#f0f6fc;
+    classDef cost fill:#40220f,stroke:#f0883e,stroke-width:1px,color:#f0f6fc;
+    classDef alternative fill:#083a3a,stroke:#39d0c3,stroke-width:1px,color:#f0f6fc;
+    classDef use fill:#2d2440,stroke:#bc8cff,stroke-width:1px,color:#f0f6fc;
     class D0,D1,D2,D3,D4,D5 data;
     class P0,P3,P4,P5,F0,F3 train;
     class E0,E1,E2,E3,E4,E5 embed;
@@ -119,11 +181,18 @@ flowchart TD
     class T0,T6,T12,T13 post;
     class T10 gguf;
     class W0 weights;
+    class C0,C1,C2,C3,C4,C5 context;
+    class A0,A1,A2,A3,A4,A5 cost;
+    class L0,L1,L2,L3,L4,L5 alternative;
+    class U0,U1,U2 use;
 
     click D1 "https://commoncrawl.org" "Open Common Crawl"
     click D2 "https://openwebtext2.readthedocs.io" "Open WebText2"
     click D3 "https://www.wikipedia.org" "Open Wikipedia"
     click D4 "https://arxiv.org/abs/2101.00027" "Open The Pile"
+    click L2 "https://github.com/NX-AI/xlstm" "Open xLSTM"
+    click L4 "https://github.com/MoonshotAI/Kimi-Linear" "Open Kimi Linear"
+    click U2 "https://github.com/NX-AI/tirex" "Open TiRex"
 ```
 
 ## links
@@ -132,3 +201,4 @@ flowchart TD
 - https://vielhuber.de/blog/large-language-model-selbst-bauen
 - https://gist.github.com/vielhuber/81f6eb87fedd5e677144aef2b5476cf7
 - https://gist.github.com/vielhuber/8d753f23b642cc326386dcc7ea1585d7
+- https://ct.de/yqw2
