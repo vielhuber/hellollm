@@ -10,7 +10,7 @@ flowchart TD
     end
 
     subgraph PRE["<b>PRE-TRAINING</b>"]
-        P6["<b>Model setup</b><br/>Transformer architecture<br/>tokenizer + vocabulary<br/>maximum sequence length<br/>number format"]
+        P6["<b>Model setup</b><br/>Transformer architecture<br/>tokenizer + vocabulary<br/>maximum sequence length<br/>numeric precision"]
         P7["<b>Training system</b><br/>GPU + VRAM<br/>runtime software<br/>fast storage for data<br/>and checkpoints"]
         W0["<b>Initial weights</b><br/>model numbers<br/>start random<br/>before training<br/>[[0.01][-0.02][0.00]...]<br/>[[-0.03][0.01][0.02]...]"]
         P5["<b>Batch / training step</b><br/>small part of<br/>the training set"]
@@ -37,7 +37,7 @@ flowchart TD
     end
 
     subgraph UPDATE["<b>LOSS & WEIGHT UPDATE</b>"]
-        P0["<b>Updated weights</b><br/>model numbers<br/>updated each step<br/>saved in checkpoints<br/>[[0.01][-0.02][0.00]...]<br/>[[-0.03][0.01][0.02]...]"]
+        P0["<b>Updated weights</b><br/>model numbers<br/>updated each step<br/>included in checkpoints<br/>[[0.01][-0.02][0.00]...]<br/>[[-0.03][0.01][0.02]...]"]
         F3["<b>Generated text</b><br/>&quot;Every effort<br/>moves you forward&quot;"]
         P3["<b>More training?</b><br/>more batches / steps<br/>or training budget reached"]
         P4["<b>Final weights</b><br/>learned values<br/>after training<br/>[[0.84][-1.20][0.37]...]<br/>[[1.02][0.15][-0.66]...]"]
@@ -52,18 +52,18 @@ flowchart TD
 
     subgraph POST["<b>POST-TRAINING</b>"]
         T0["<b>Pretrained base model</b><br/>architecture + tokenizer<br/>weights as Safetensors<br/>may load in 4-bit<br/>for QLoRA<br/>not a GGUF file<br/>[[0.84][-1.20][0.37]...]<br/>[[1.02][0.15][-0.66]...]"]
-        T13["<b>Current trainable weights</b><br/>full fine-tuning:<br/>model weights change<br/>LoRA / QLoRA:<br/>base model stays fixed<br/>adapter weights change<br/>saved in checkpoints"]
+        T13["<b>Current trainable weights</b><br/>full fine-tuning:<br/>model weights change<br/>LoRA / QLoRA:<br/>base model stays fixed<br/>adapter weights change<br/>included in checkpoints"]
         T12["<b>More posttraining?</b><br/>more examples / steps<br/>or training budget reached"]
         T6["<b>Training result</b><br/>updated model weights<br/>or learned<br/>adapter weights<br/>[[0.79][-1.15][0.41]...]<br/>[[0.98][0.22][-0.60]...]"]
     end
 
     subgraph ARTIFACTS["<b>TRAINING ARTIFACTS</b>"]
         T14["<b>LoRA adapter</b><br/>small file with<br/>learned changes only<br/>needs the base model"]
-        T15["<b>Merged Safetensors</b><br/>base model + changes<br/>full model weights<br/>can be trained again"]
+        T15["<b>Full model Safetensors</b><br/>full fine-tuning:<br/>save updated model<br/>LoRA / QLoRA:<br/>merge base + adapter<br/>can be trained again"]
     end
 
     subgraph GGUF["<b>GGUF</b>"]
-        T10["<b>GGUF files</b><br/>quantized model<br/>packed for inference<br/>e.g. llama-7b-Q4_K_M.gguf<br/>not used for training"]
+        T10["<b>GGUF files</b><br/>quantized model<br/>packed for inference<br/>e.g. llama-7b-Q4_K_M.gguf<br/>not a Studio training source"]
     end
 
     subgraph TOKENS["<b>TOKENS & CONTEXT</b>"]
@@ -105,7 +105,7 @@ flowchart TD
     D4 -->|collect| D0
     D5 -->|collect| D0
     D0 -->|sample batch| P5
-    P6 -->|create random tensors| W0
+    P6 -->|initialize model| W0
     P7 -->|provide compute| P5
     P0 -->|next step weights| P5
     W0 -->|first step weights| P5
@@ -133,12 +133,12 @@ flowchart TD
     T2 -->|collect| T8
     T3 -->|collect| T8
     T0 -->|initialize| T13
-    T13 -->|use weights| T12
-    T8 -->|train + align| T12
-    T12 -->|more steps + optimize| T13
-    T12 -->|training budget reached| T6
-    T6 -->|save changes only| T14
-    T6 -->|save full model| T15
+    T13 -->|run step + optimize| T12
+    T8 -->|provide examples| T12
+    T12 -->|more steps:<br/>use updated weights| T13
+    T12 -->|budget reached:<br/>keep updated weights| T6
+    T6 -->|LoRA / QLoRA:<br/>save changes| T14
+    T6 -->|full fine-tuning:<br/>save model| T15
     T14 -->|merge with base model| T15
     T15 -->|quantize + pack| T10
     E1 -.->|forms| C0
