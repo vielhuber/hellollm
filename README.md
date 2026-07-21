@@ -7,8 +7,14 @@ hellollm shows how large language models are trained and packaged.
 
 ## architecture
 
-- [view architecture on github](architecture.md)
-- [open interactive architecture](https://vielhuber.github.io/hellollm/)
+- [open diagram](https://vielhuber.github.io/hellollm/)
+- [markdown source](architecture.md)
+
+## build
+
+```sh
+npm run architecture:sync
+```
 
 ## links
 
