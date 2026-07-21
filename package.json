@@ -1,10 +1,11 @@
 {
+    "type": "module",
     "scripts": {
-        "architecture:sync": "node scripts/sync-architecture-data.mjs",
-        "architecture:check": "node scripts/sync-architecture-data.mjs --check"
+        "architecture:sync": "node sync.js",
+        "architecture:check": "node sync.js --check"
     },
     "devDependencies": {
         "prettier": ">=3"
     },
-    "version": "1.5.5"
+    "version": "1.5.6"
 }
