@@ -1,0 +1,16 @@
+import { readFile, writeFile } from 'node:fs/promises';
+
+let markdownUrl = new URL('../architecture.md', import.meta.url);
+let dataUrl = new URL('../architecture-data.js', import.meta.url);
+let markdown = await readFile(markdownUrl, 'utf8');
+let expected = `window.ARCHITECTURE_MARKDOWN = ${JSON.stringify(markdown)};\n`;
+
+if (process.argv.includes('--check')) {
+    let current = await readFile(dataUrl, 'utf8').catch(() => '');
+    if (current !== expected) {
+        console.error('architecture-data.js is not synchronized with architecture.md.');
+        process.exitCode = 1;
+    }
+} else {
+    await writeFile(dataUrl, expected);
+}

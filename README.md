@@ -7,8 +7,8 @@ hellollm shows how large language models are trained and packaged.
 
 ## architecture
 
-- [view diagram on github](architecture.mmd)
-- [view diagram on mermaid.live](https://mermaid.live/view?code=https%3A%2F%2Fraw.githubusercontent.com%2Fvielhuber%2Fhellollm%2Fmain%2Farchitecture.mmd)
+- [view architecture on github](architecture.md)
+- [open interactive architecture](https://vielhuber.github.io/hellollm/)
 
 ## links
 

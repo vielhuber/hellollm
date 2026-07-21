@@ -1,8 +1,12 @@
 {
+    "scripts": {
+        "architecture:sync": "node scripts/sync-architecture-data.mjs",
+        "architecture:check": "node scripts/sync-architecture-data.mjs --check"
+    },
     "devDependencies": {
         "prettier": ">=3",
         "@prettier/plugin-php": ">=0.25",
         "prettier-plugin-sh": "^0.18.1"
     },
-    "version": "1.5.3"
+    "version": "1.5.4"
 }
