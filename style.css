@@ -258,14 +258,6 @@ main {
     --accent: #d29922;
 }
 
-.palette-embedding {
-    --accent: #58a6ff;
-}
-
-.palette-model {
-    --accent: #3fb950;
-}
-
 .palette-posttraining {
     --accent: #f85149;
 }
@@ -274,24 +266,12 @@ main {
     --accent: #d2a8ff;
 }
 
-.palette-gguf {
-    --accent: #79c0ff;
-}
-
 .palette-context {
     --accent: #8cafff;
 }
 
 .palette-cost {
     --accent: #f0883e;
-}
-
-.palette-alternative {
-    --accent: #39d0c3;
-}
-
-.palette-use {
-    --accent: #bc8cff;
 }
 
 #measure {
