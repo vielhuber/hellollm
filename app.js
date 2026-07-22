@@ -246,7 +246,7 @@ function buildLayoutGraph(activeGroups) {
         }
         return visibleNodeId(edge.target);
     };
-    let children = architecture.groups.map(group => {
+    let groupElements = architecture.groups.map(group => {
         let useMainPorts = group.layout === 'main' && !activeGroups.has(group.id);
         let mainLayoutOptions = useMainPorts ? { 'elk.portConstraints': 'FIXED_SIDE' } : {};
         let mainPorts = useMainPorts
@@ -312,6 +312,16 @@ function buildLayoutGraph(activeGroups) {
             })
         };
     });
+    let layoutGroupOrder = [
+        'training-data-pre',
+        'tokens-context',
+        'pre-training',
+        'attention-cost',
+        'training-data-post',
+        'post-training',
+        'training-artifacts'
+    ];
+    let children = layoutGroupOrder.map(groupId => groupElements.find(element => element.sourceId === groupId));
     children.splice(1, 0, {
         id: 'main-axis-start',
         width: 1,
@@ -321,7 +331,9 @@ function buildLayoutGraph(activeGroups) {
     let visibleEdges = new Map();
 
     for (let edge of architecture.edges) {
-        if (edge.style === 'loop') {
+        let sourceNode = architecture.nodeById.get(edge.source);
+        let targetNode = architecture.nodeById.get(edge.target);
+        if (edge.style === 'loop' || (edge.style === 'dashed' && sourceNode.groupId !== targetNode.groupId)) {
             continue;
         }
         let source = visibleNodeId(edge.source);
@@ -375,6 +387,21 @@ function buildLayoutGraph(activeGroups) {
             'elk.layered.priority.straightness': '1000'
         }
     }));
+    let postTrainingTarget = activeGroups.has('post-training') ? 'group-post-training' : 'main-in-post-training';
+    let supportingRowEdges = ['tokens-context', 'attention-cost'].flatMap(groupId => [
+        {
+            id: `supporting-row-in-${groupId}`,
+            sources: ['main-axis-start'],
+            targets: [`group-${groupId}`],
+            dataType: 'layout-edge'
+        },
+        {
+            id: `supporting-row-out-${groupId}`,
+            sources: [`group-${groupId}`],
+            targets: [postTrainingTarget],
+            dataType: 'layout-edge'
+        }
+    ]);
 
     return {
         id: 'root',
@@ -390,11 +417,12 @@ function buildLayoutGraph(activeGroups) {
             'elk.layered.cycleBreaking.strategy': 'GREEDY',
             'elk.layered.considerModelOrder.strategy': 'NODES_AND_EDGES',
             'elk.layered.considerModelOrder.groupModelOrder.cbGroupOrderStrategy': 'MODEL_ORDER',
+            'elk.layered.crossingMinimization.forceNodeModelOrder': 'true',
             'elk.layered.nodePlacement.strategy': 'NETWORK_SIMPLEX',
             'elk.layered.nodePlacement.favorStraightEdges': 'true'
         },
         children,
-        edges: [...edges, ...mainAxisEdges]
+        edges: [...edges, ...mainAxisEdges, ...supportingRowEdges]
     };
 }
 
@@ -530,6 +558,7 @@ function renderNodes(layer, elements) {
 }
 
 function renderEdges(layer, edges, elements) {
+    let elementById = new Map(elements.nodes.map(element => [element.id, element]));
     let nodeElements = new Map(
         elements.nodes.filter(element => element.dataType === 'node').map(element => [element.sourceId, element])
     );
@@ -581,7 +610,83 @@ function renderEdges(layer, edges, elements) {
                 }
             ];
         });
-    let visibleEdges = [...edges.filter(edge => edge.dataType !== 'layout-edge'), ...loopEdges];
+    let referenceGroups = new Map();
+    for (let edge of architecture.edges) {
+        let sourceNode = architecture.nodeById.get(edge.source);
+        let targetNode = architecture.nodeById.get(edge.target);
+        if (edge.style !== 'dashed' || sourceNode.groupId === targetNode.groupId) {
+            continue;
+        }
+        let sourceId = nodeElements.has(edge.source) ? edge.source : `group-${sourceNode.groupId}`;
+        let targetId = nodeElements.has(edge.target) ? edge.target : `group-${targetNode.groupId}`;
+        let connectsCollapsedSupportingGroups =
+            sourceId === 'group-tokens-context' && targetId === 'group-attention-cost';
+        if (connectsCollapsedSupportingGroups) {
+            continue;
+        }
+        if (sourceId === targetId) {
+            continue;
+        }
+        let key = `${sourceId}::${targetId}`;
+        if (!referenceGroups.has(key)) {
+            referenceGroups.set(key, { sourceId, targetId, originals: [] });
+        }
+        referenceGroups.get(key).originals.push(edge);
+    }
+    let referenceEdges = Array.from(referenceGroups.values()).flatMap((reference, index) => {
+        let source = elementById.get(reference.sourceId);
+        let target = elementById.get(reference.targetId);
+        if (!source || !target) {
+            return [];
+        }
+        let sourceCenterX = source.absoluteX + source.width / 2;
+        let targetCenterX = target.absoluteX + target.width / 2;
+        let sourceY = source.absoluteY + source.height / 2;
+        let targetY = target.absoluteY + target.height / 2;
+        let targetIsLeft = targetCenterX < sourceCenterX;
+        let sourceX = source.absoluteX + (targetIsLeft ? 0 : source.width);
+        let targetX = target.absoluteX + (targetIsLeft ? target.width : 0);
+        let middleX = (sourceX + targetX) / 2;
+        let label = reference.originals.length === 1 ? reference.originals[0].label : '';
+        let labelLines = label ? wrapLabel(label) : [];
+        let labelWidth = label
+            ? Math.min(180, Math.max(72, Math.max(...labelLines.map(line => line.length)) * 6.3 + 18))
+            : 0;
+        let labelHeight = labelLines.length * 14 + 10;
+        let showLabel =
+            Boolean(label) && !reference.sourceId.startsWith('group-') && !reference.targetId.startsWith('group-');
+        return [
+            {
+                id: `reference-edge-${index + 1}`,
+                edgeStyle: 'dashed',
+                labelText: label,
+                labelLines,
+                sections: [
+                    {
+                        id: `reference-section-${index + 1}`,
+                        startPoint: { x: sourceX, y: sourceY },
+                        bendPoints: [
+                            { x: middleX, y: sourceY },
+                            { x: middleX, y: targetY }
+                        ],
+                        endPoint: { x: targetX, y: targetY }
+                    }
+                ],
+                labels: showLabel
+                    ? [
+                          {
+                              id: `reference-label-${index + 1}`,
+                              x: middleX - labelWidth / 2,
+                              y: (sourceY + targetY - labelHeight) / 2,
+                              width: labelWidth,
+                              height: labelHeight
+                          }
+                      ]
+                    : []
+            }
+        ];
+    });
+    let visibleEdges = [...edges.filter(edge => edge.dataType !== 'layout-edge'), ...loopEdges, ...referenceEdges];
     let sections = visibleEdges.flatMap(edge =>
         (edge.sections || []).map(section => ({ edge, section, id: `${edge.id}-${section.id}` }))
     );
